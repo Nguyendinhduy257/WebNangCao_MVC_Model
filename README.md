@@ -6,7 +6,9 @@ git commit -m "Tên Đặt cho Message Commit"
 
 git branch : xem danh sách các branch
 git checkout <tên branch>
+git checkout master : quay về banch main || master
 git push : nếu để nguyên vậy thì nó tự động push lên branch hiện tại của nó (xem "git status" để biết branch nào )
+git push origin main : push lên branch main || master
 
 cách hoàn tác việc Push Commit:
 git revert <commit_id> : "commit_id" xem trên detail của commit đấy
