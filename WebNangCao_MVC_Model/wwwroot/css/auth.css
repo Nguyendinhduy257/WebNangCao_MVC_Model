@@ -1,0 +1,414 @@
+﻿/* auth.css */
+
+/* Reset cơ bản để giao diện giống nhau trên mọi trình duyệt */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient( 125deg, #2c3e50, /* Màu tối để dịu mắt */
+                #2980b9, /* Xanh biển */
+                #8e44ad, /* Tím */
+                #c0392b /* Đỏ đô nhẹ */
+    );
+    background-size: 150% 150%;
+    animation: aurora 10s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+@keyframes aurora {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Khung chứa chính (Card) */
+.auth-container {
+    background-color: rgba(255, 255, 255, 0.95); /* Màu trắng độ trong suốt 95% */
+    backdrop-filter: blur(10px); /* Làm mờ nền đằng sau lưng nó */
+    width: 420px;
+    padding: 30px;
+    border-radius: 16px; /* Bo góc tròn hơn chút */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Đổ bóng sâu hơn */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* Viền sáng nhẹ */
+    position: relative;
+}
+
+/* Phần Header (Logo & Tiêu đề) */
+.auth-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Hộp chứa icon tròn tròn */
+.header-icon-box {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6366f1, #a855f7); /* Màu gradient tím */
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px auto;
+    color: white;
+}
+
+.big-icon {
+    width: 32px;
+    height: 32px;
+}
+/* Kích thước icon mũ */
+
+.auth-header h1 {
+    color: #1f2937;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.auth-header p {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.tabs {
+    display: flex;
+    background-color: #f3f4f6;
+    padding: 5px;
+    border-radius: 50px;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Khoảng cách giữa chữ và icon */
+}
+
+.tab-icon {
+    width: 16px;
+    height: 16px;
+}
+/* Kích thước icon trong tab */
+
+.tab-btn.active {
+    background-color: #ffffff;
+    color: #4f46e5;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tab-btn:hover:not(.active) {
+    color: #374151;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Wrapper để chứa cả input và icon */
+.input-wrapper {
+    position: relative;
+    z-index: 1; /* Mặc định thấp */
+    transition: all 0.3s ease;
+}
+
+/* Khi Input được focus, đẩy cả cụm này lên lớp cao nhất để bóng đổ đè lên thằng khác */
+.input-wrapper:focus-within {
+    z-index: 10; 
+}
+/* Icon nằm bên trong input */
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%); /* Căn giữa theo chiều dọc */
+    color: #9ca3af;
+    width: 18px;
+    height: 18px;
+    pointer-events: none; /* Click xuyên qua icon vào input */
+    z-index: 20;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Hiệu ứng nảy */
+}
+
+/* Input padding-left để chữ không đè lên icon */
+.form-input {
+    width: 100%;
+    padding: 10px 10px 10px 40px; /* 40px bên trái chừa chỗ cho icon */
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    color: #1f2937;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); /* Hiệu ứng focus ring */
+    transform: scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(99,102,241,0.2), 
+                0 4px 6px -2px rgba(99,102,241,0.1);
+    z-index: 0;
+    position: relative;
+}
+.input-wrapper:focus-within .input-icon {
+    color: #6366f1; /* Đổi màu tím */
+    /* QUAN TRỌNG: Phải giữ lại translateY(-50%) nếu không icon sẽ nhảy xuống dưới */
+    /* Đồng thời thêm scale(1.2) để phóng to hơn input một chút tạo điểm nhấn */
+    transform: translateY(-50%) scale(1.2);
+}
+
+.btn-submit {
+    /* --- CẤU TRÚC CƠ BẢN --- */
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    color: white;
+    /* Để text luôn nổi lên trên lớp màu nền sắp chạy */
+    position: relative;
+    z-index: 1;
+    overflow: hidden; /* Cắt phần màu thừa nếu nó chạy ra ngoài góc bo tròn */
+    /* Khai báo 2 lớp nền:
+       1. Lớp trên (Màu Hover): Ví dụ Gradient Hồng - Tím (Sẽ chạy đè lên)
+       2. Lớp dưới (Màu Gốc): Gradient Xanh - Tím (Như code cũ của bạn)
+    */
+    background-image: linear-gradient(to right, #ed213a, #93291e),/*màu khi Hover*/
+    linear-gradient(315deg, #4f46e5 0%, #7c3aed 50%, #2c3e50 100%); /*màu mặc định*/
+    /* Thiết lập kích thước:
+       - Lớp trên: Rộng 0% (Ban đầu ẩn đi)
+       - Lớp dưới: Rộng 100% (Luôn hiện)
+    */
+    background-size: 0% 100%, 100% 100%;
+    background-repeat: no-repeat;
+    background-position: left center; /* Cả 2 đều bắt đầu từ bên trái */
+    /* Animation cho background-size để tạo hiệu ứng trượt */
+    transition: background-size 0.4s ease-in-out, transform 0.2s;
+}
+
+    .btn-submit:hover {
+        /* Khi hover: Kéo lớp màu trên cùng rộng ra 100% -> Che lấp lớp cũ */
+        background-size: 100% 100%, 100% 100%;
+        /* Hiệu ứng nhấc nhẹ nút lên (Thay cho translateX bị lỗi) */
+        transform: translateY(-2px);
+        /* Thêm bóng đổ cho đẹp */
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        color: #fef9c3;
+        letter-spacing: 0.5px; /*giãn chữ*/
+        font-weight:600;
+        transition: all 0.3s ease-in-out;
+    }
+.btn-submit:active {
+    transform: scale(0.98); /* Nhấn xuống nhẹ khi click */
+    transition: transform 0.1s ease-in-out;
+}
+.text-danger {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+.validation-summary {
+    padding: 10px;
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 6px;
+    color: #dc2626;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.validation-summary-errors ul {
+    list-style: none;
+    padding: 10px;
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 6px;
+    color: #dc2626;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+/* Utility Class để ẩn hiện */
+.hidden {
+    display: none !important;
+}
+/*Toggle cho Role của User */
+/*  ROLE DROPDOWN STYLE  */
+
+/* 2. Đẩy Role Wrapper ra ngoài bằng số ÂM */
+.role-wrapper {
+    position: absolute;
+    /* Đẩy lên trên đầu thẻ Card khoảng 50px */
+    top: 1px;
+    /* Căn thẳng hàng với mép trái của Card */
+    left: -125px;
+    z-index: 100;
+    margin: 0;
+}
+
+/* 3. Tinh chỉnh lại nút hiển thị cho nổi bật trên nền Gradient */
+.role-selected {
+    /* Màu nền trắng hoàn toàn để không bị chìm vào nền Gradient */
+    background-color: #ffffff;
+    /* Thêm độ trong suốt nhẹ nếu thích (Glassmorphism) */
+    /* background-color: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px); */
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    padding: 8px 16px; /* To hơn chút cho đẹp */
+    border-radius: 30px; /* Bo tròn hẳn */
+    font-size: 13px;
+    color: #374151;
+    cursor: pointer;
+    /* Đổ bóng đậm hơn vì giờ nó nằm lơ lửng */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+/* Định nghĩa hiệu ứng nhún nhảy khi Hover vào nút Toggle Role cho User */
+@keyframes nhunNhay {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px); /* Nhún lên 5px */
+    }
+}
+
+/* Áp dụng hiệu ứng khi hover */
+.role-selected:hover {
+    animation: nhunNhay 0.5s ease-in-out infinite; /* Lặp lại vĩnh viễn */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2); /* Giữ nguyên hiệu ứng bóng */
+}
+
+.role-info {
+    display: flex; /* QUAN TRỌNG: Căn icon và chữ thẳng hàng */
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+}
+
+.role-icon {
+    width: 14px;
+    height: 14px;
+    color: #6366f1;
+}
+
+.role-arrow {
+    width: 14px;
+    height: 14px;
+    color: #9ca3af;
+    transition: transform 0.2s;
+}
+
+/* Xoay mũi tên khi mở */
+.role-dropdown.open .role-arrow {
+    transform: rotate(180deg);
+}
+
+/* 3. Danh sách xổ xuống */
+.role-options {
+    position: absolute;
+    top: 115%; /* Cách nút 1 chút */
+    left: 0;
+    width: 160px; /* Rộng hơn nút bấm 1 chút */
+
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    list-style: none;
+    padding: 5px;
+    /* Hiệu ứng ẩn hiện */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease; /*Hiệu ứng khi mở List sau khi Toggle*/
+    z-index: 101;
+}
+
+/* Class active được thêm bằng JS */
+.role-options.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Item trong danh sách */
+.role-options li {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #4b5563;
+    transition: background 0.2s;
+}
+
+.role-options li:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.opt-icon {
+    width: 16px;
+    height: 16px;
+    color: #6b7280;
+}
+
+.check-icon {
+    width: 14px;
+    height: 14px;
+    color: #10b981;
+    margin-left: auto;
+}

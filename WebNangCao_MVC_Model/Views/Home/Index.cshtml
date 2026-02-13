@@ -1,0 +1,236 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+
+    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+                        <i data-lucide="graduation-cap" class="w-6 h-6 text-white"></i> <!--Thẻ <i> cho ICON-->
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">EduTest</h1>
+                        <p class="text-xs text-gray-500">Hệ thống đánh giá năng lực</p>
+                    </div>
+                </div>
+
+                <a asp-controller="Home" asp-action="GetStarted"
+                   class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
+                    Bắt đầu ngay
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 rounded-full mb-6">
+                    <i data-lucide="award" class="w-4 h-4 text-indigo-600"></i> <!--Thẻ <i> cho ICON-->
+                    <span class="text-sm font-medium text-indigo-600">
+                        Nền tảng đánh giá năng lực trực tuyến
+                    </span>
+                </div>
+                <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                    Đánh giá năng lực
+                    <br />
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+                        Phát triển tương lai
+                    </span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                    Nền tảng thi trắc nghiệm thông minh giúp học sinh, sinh viên đánh giá năng lực học tập,
+                    theo dõi tiến độ và phát triển kỹ năng một cách hiệu quả.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a asp-controller="Home" asp-action="GetStarted"
+                       class="inline-flex items-center justify-center rounded-md text-sm font-medium h-12 px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
+                        Bắt đầu ngay
+                        <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i> <!--Thẻ <i> cho ICON-->
+                    </a>
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 px-8">
+                        Tìm hiểu thêm
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6 mt-12 pt-12 border-t border-gray-200">
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900 mb-1">6+</div>
+                        <div class="text-sm text-gray-600">Bài thi đa dạng</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900 mb-1">100%</div>
+                        <div class="text-sm text-gray-600">Miễn phí</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl font-bold text-gray-900 mb-1">5</div>
+                        <div class="text-sm text-gray-600">Cấp độ đánh giá</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="relative z-10">
+                    <div class="bg-white border-0 shadow-2xl overflow-hidden rounded-xl">
+                        <div class="p-8">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-lg">A</span>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-900">Nguyễn Văn A</div>
+                                    <div class="text-sm text-gray-500">Đang làm bài thi</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <span class="text-sm text-gray-600">Thời gian còn lại</span>
+                                    <span class="font-semibold text-indigo-600">25:30</span>
+                                </div>
+
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <span class="text-sm text-gray-600">Đã hoàn thành</span>
+                                    <span class="font-semibold text-green-600">15/20 câu</span>
+                                </div>
+
+                                <div class="pt-2">
+                                    <div class="text-sm text-gray-600 mb-2">Tiến độ</div>
+                                    <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                        <div class="h-full w-3/4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full blur-3xl opacity-30 -z-10"></div>
+                <div class="absolute -bottom-8 -left-8 w-64 h-64 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full blur-3xl opacity-30 -z-10"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Tính năng nổi bật</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Hệ thống được thiết kế để mang lại trải nghiệm học tập tốt nhất cho người dùng
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-shadow rounded-xl">
+                <div class="p-8">
+                    <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-7 h-7 text-indigo-600"></i> <!--Thẻ <i> cho ICON-->
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Đa dạng bài thi</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        6+ bài thi trắc nghiệm đa dạng các môn học từ cơ bản đến nâng cao.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-shadow rounded-xl">
+                <div class="p-8">
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <i data-lucide="clock" class="w-7 h-7 text-purple-600"></i> <!--Thẻ <i> cho ICON-->
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Tính giờ tự động</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Hệ thống đếm thời gian tự động và cảnh báo khi sắp hết giờ.
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-shadow rounded-xl">
+                <div class="p-8">
+                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                        <i data-lucide="bar-chart-3" class="w-7 h-7 text-green-600"></i> <!--Thẻ <i> cho ICON-->
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Chấm điểm tự động</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Kết quả được tính toán và hiển thị ngay lập tức sau khi nộp bài.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Cách thức hoạt động</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Chỉ với 4 bước đơn giản, bạn có thể bắt đầu hành trình đánh giá năng lực
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="relative inline-flex items-center justify-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="users" class="w-10 h-10 text-white"></i>
+                    </div>
+                    <div class="absolute -top-2 -right-2 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">1</span>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Đăng ký tài khoản</h3>
+                <p class="text-gray-600">Tạo tài khoản miễn phí chỉ trong vài giây</p>
+            </div>
+
+            <div class="text-center">
+                <div class="relative inline-flex items-center justify-center mb-6">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="target" class="w-10 h-10 text-white"></i>
+                    </div>
+                    <div class="absolute -top-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-sm">2</span>
+                    </div>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Chọn bài thi</h3>
+                <p class="text-gray-600">Lựa chọn bài thi phù hợp với mục tiêu của bạn</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg">
+                            <i data-lucide="graduation-cap" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-900">EduTest</h3>
+                            <p class="text-xs text-gray-500">Đánh giá năng lực</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600">
+                        Nền tảng thi trắc nghiệm trực tuyến hàng đầu Việt Nam
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-4">Sản phẩm</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-indigo-600">Bài thi</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Tính năng</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="border-t border-gray-200 mt-12 pt-8 text-center text-sm text-gray-600">
+                <p>&copy; 2026 EduTest. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+</div>
