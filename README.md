@@ -5,7 +5,8 @@ git add .
 git commit -m "Tên Đặt cho Message Commit"
 git push
 - Các câu lệnh với branch:
-git branch : xem danh sách các branch
+git branch -r : xem danh sách các branch
+git branch : xem branch hiện tại cùng với danh sách
 git checkout <tên branch>
 git checkout master : quay về banch main || master
 git push : nếu để nguyên vậy thì nó tự động push lên branch hiện tại của nó (xem "git status" để biết branch nào )
