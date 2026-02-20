@@ -16,7 +16,7 @@ namespace WebNangCao_MVC_Model.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // CÁCH 1: Kích hoạt thủ công từng file (Dùng cách này để dễ kiểm soát)
+            // CÁCH 1: Kích hoạt thủ công từng file trong thư mục FluentAPI (Dùng cách này để dễ kiểm soát)
             modelBuilder.ApplyConfiguration(new UserConfiguration());
 
             // CÁCH 2: Kích hoạt TẤT CẢ file cấu hình trong project (Nhanh, gọn)
