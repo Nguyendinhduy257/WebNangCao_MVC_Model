@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Đăng Nhập"; // Đổi title cho đúng
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Giữ nguyên layout nếu em muốn
+}
+<div class="flex flex-col h-screen justify-center items-center">
+    <div class="bg-blue-500 p-3 rounded-2xl flex items-center justify-center shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />
+        </svg>
+    </div>
+    <h1 class="text-2xl font-bold mt-6">EduTest</h1>
+    <h1 class="p-2 text-sm text-gray-500">Hệ thống đánh giá năng lực trực tuyến</h1>
+    <div class="rounded-xl border-blue-500 shadow-xl border-2 p-8">
+        <h1 class="text-2xl font-bold text-center">Chào mừng bạn</h1>
+        <h1 class="p-2 text-sm text-gray-500">Đăng Nhập Hoặc Tạo Tài Khoản Để Bắt Đầu</h1>
+        <div id = "auth-container">
+            <div class="border-2 p-1 flex justify-around bg-gray-300 rounded-xl mb-6 mt-6">
+                <button id = "btn-login" onclick="ShowLogin()" class="font-bold bg-white p-1 w-1/2 text-center text-xs rounded-xl">Đăng Nhập</button>
+                <button id = "btn-register" onclick="ShowRegister()" class="font-bold p-1 w-1/2 text-center text-xs">Đăng Ký</button>
+            </div>
+            <div id="form-login">
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Email hoặc tên đăng nhập</h1>
+                    <input type="text" class="w-full bg-gray-100 p-2 rounded mb-4" placeholder="example@email.com" required>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Mật khẩu</h1>
+                    <input type="password" class="w-full bg-gray-100 p-2 rounded mb-6" placeholder="********" required>
+                </div>
+                <div class="flex items-center justify-center">
+                    <button class="bg-violet-500 hover:bg-violet-700 w-full text-white font-bold py-2 rounded">
+                        Đăng Nhập
+                    </button>
+                </div>
+            </div>
+            <div id="form-register" class="hidden">
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Họ và tên</h1>
+                    <input type="text" class="w-full bg-gray-100 p-2 rounded mb-4" placeholder="Nguyễn Văn A" required>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Tên đăng nhập</h1>
+                    <input type="text" class="w-full bg-gray-100 p-2 rounded mb-4" placeholder="nguyenvana" required>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Email</h1>
+                    <input type="text" class="w-full bg-gray-100 p-2 rounded mb-4" placeholder="example@email.com" required>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Mật Khẩu</h1>
+                    <input type="text" class="w-full bg-gray-100 p-2 rounded mb-4" placeholder="********" required>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm mb-1">Xác nhận mật khẩu</h1>
+                    <input type="text" class="w-full bg-gray-100 p-2 rounded mb-4" placeholder="********" required>
+                </div>
+            </div>
+        </div>
+        <script>
+            function ShowRegister() {
+                //Tim Login va tat no di
+                document.getElementById('form-login').classList.add('hidden');
+                //Tim Register va bat no len
+                document.getElementById('form-register').classList.remove('hidden');
+            }
+            function ShowLogin() {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-register').classList.add('hidden');
+            }
+        </script>
+    </div>
+    <h1 class="text-xs mt-6">Bằng cách tiếp tục, bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật</h1>
+</div>

@@ -31,6 +31,11 @@ namespace WebNangCao_MVC_Model.Controllers
             model.ActiveTab = activeTab;
             return View(model);
         }
+        public IActionResult Login()
+        {
+            return View(); // Nó sẽ tự tìm vào Views/Account/Login.cshtml
+        }
+        
 
         [HttpPost]
         public IActionResult Login(AuthViewModels model)
