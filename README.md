@@ -25,3 +25,15 @@ HEAD = commit hiện tại
 HEAD~1 = commit trước đó
 HEAD~2 = 2 commit trước
 Ví dụ: git reset --hard HEAD~1
+
+- Hợp nhất và đồng bộ dữ liệu từ Main sang các Branch khác
+// Cập nhật main mới nhất
+git checkout main
+git pull origin main
+
+//chuyển sang branch cần merge
+git checkout Chien
+(git checkout ....)
+
+//merge main vào branch đó (lặp lại với branch khác)
+git merge main
