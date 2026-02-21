@@ -1,0 +1,160 @@
+﻿@{
+    Layout = null;
+    //Truy cập ...localhost:XXXX/Student/Dashboard
+}
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Dashboard Thí Sinh</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="~/css/student-dashboard.css" />
+        <script src="https://unpkg.com/lucide@latest"></script>
+    </head>
+    <body class="dashboard-body">
+    
+        <header class="top-header">
+            <a href="#" class="btn-back">
+                <i data-lucide="arrow-left" class="back-icon"></i>
+            Quay lại
+            </a>
+            <div class="user-info">
+                <span class="greeting">Xin chào, </span>
+                <!--sử dụng tên là tên Username-->
+                <span class="user-name">Nguyễn Văn A</span>
+                <!--Sử avater là avatar của username--></>
+                <div class="avatar-container">
+                    <div class="avatar" id="userAvatar">N</div>
+
+                    <div class="avatar-dropdown" id="avatarDropdown">
+                        <div class="dropdown-header">
+                            <strong>Nguyễn Văn A</strong>
+                            <span>student@example.com</span>
+                        </div>
+                        <ul class="dropdown-list">
+                            <li><a href="#"><i data-lucide="user"></i> Hồ sơ cá nhân</a></li>
+                            <li><a href="#"><i data-lucide="settings"></i> Cài đặt</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/Account/Logout" class="text-danger"><i data-lucide="log-out"></i> Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="dashboard-container">
+            
+            <section class="page-title">
+            <h1>Dashboard Thí Sinh</h1>
+            <p>Tìm kiếm và tham gia các bài thi</p>
+            </section>
+
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat_info">
+                        <span class="stat-label">Tổng bài thi</span>
+                        <span class="stat-value">@Model.TotalExams</span>
+                    </div>
+                    <div class="stat-icon bg-blue"><i data-lucide="file-text"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Điểm trung bình</span>
+                        <span class="stat-value">@Model.AverageScore</span>
+                    </div>
+                <div class="stat-icon bg-green"><i data-lucide="trophy"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Hoàn thành</span>
+                        <span class="stat-value">@Model.CompletedExams/@Model.TotalExams</span>
+                    </div>
+                    <div class="stat-icon bg-purple"><i data-lucide="check-circle"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span class="stat-label">Sắp tới</span>
+                        <span class="stat-value">@Model.UpcomingExams</span>
+                    </div>
+                    <div class="stat-icon bg-orange"><i data-lucide="clock"></i></div>
+                </div>
+            </section>
+
+            <section class="exam-section">
+                <div class="exam-header">
+                    <h2><i data-lucide="list"></i> Danh sách các bài thi</h2>
+                    <p>Tìm thấy 8 bài thi</p>
+                </div>
+
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <i data-lucide="search"></i>
+                    <input type="text" placeholder="Tìm kiếm bài thi theo tên hoặc môn học..." />
+                    </div>
+                    <button class="btn-toggle-filter" id="btnToggleFilter">
+                        <i data-lucide="filter"></i> Bộ lọc
+                    </button>
+                </div>
+                <div class="advanced-filter" id="advancedFilter">
+                    <div class="filter-group">
+                        <label></label>
+                        <select><option>Tất cả môn học</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Trạng thái</label>
+                        <select><option>Tất cả trạng thái</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Độ khó</label>
+                        <select><option>Tất cả độ khó</option></select>
+                    </div>
+                </div>
+                
+                <div class="status-tabs">
+                    <button class="tab-btn active">Tất cả (8)</button>
+                    <button class="tab-btn">Có thể làm (4)</button>
+                    <button class="tab-btn">Sắp tới (3)</button>
+                    <button class="tab-btn">Đã hoàn thành (1)</button>
+                </div>
+
+                <div class="exam-grid">
+                    <div class="exam-card">
+                        <div class="card-header">
+                            <h3>Kiểm tra Toán học Học kỳ 1</h3>
+                            <span class="badge badge-success">Có thể làm</span>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-blue">Toán học</span>
+                            <span class="tag tag-orange">Trung bình</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item"><i data-lucide="calendar"></i> 15/02/2026</div>
+                            <div class="detail-item"><i data-lucide="clock"></i> 60 phút</div>
+                            <div class="detail-item"><i data-lucide="file-text"></i> 40 câu hỏi</div>
+                            <div class="detail-item"><i data-lucide="users"></i> Lớp 12A1</div>
+                        </div>
+                        <button class="btn-primary-action"><i data-lucide="play-circle"></i> Bắt đầu làm bài</button>
+                    </div>
+
+                    <div class="exam-card">
+                        <div class="card-header">
+                            <h3>Bài thi Tiếng Anh giữa kỳ</h3>
+                            <span class="badge badge-blue">Sắp tới</span>
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag tag-blue">Tiếng Anh</span>
+                            <span class="tag tag-green">Dễ</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item"><i data-lucide="calendar"></i> 18/02/2026</div>
+                            <div class="detail-item"><i data-lucide="clock"></i> 90 phút</div>
+                            <div class="detail-item"><i data-lucide="file-text"></i> 50 câu hỏi</div>
+                            <div class="detail-item"><i data-lucide="users"></i> Lớp 11B2</div>
+                        </div>
+                        <button class="btn-disabled" disabled><i data-lucide="history"></i> Chưa tới giờ thi</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script src="~/js/student-dashboard.js"></script>
+    </body>
+    </html>

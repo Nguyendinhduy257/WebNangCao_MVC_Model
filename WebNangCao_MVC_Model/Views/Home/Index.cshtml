@@ -19,13 +19,14 @@
             <div class="logo">
                 <div class="logo-icon"><i data-lucide="graduation-cap"></i></div>
                 <span class="logo-text">EduTest Pro</span>
-                    </div>
+            </div>
             <nav class="nav-links">
+                <!--#feature xét theo ID được đặt trong thẻ có liên quan-->
                 <a href="#features">Tính năng</a>
                 <a href="#about">Giới thiệu</a>
-                <a href="#" class="btn btn-primary">Bắt đầu ngay <i data-lucide="arrow-right"></i></a>
+                <a asp-controller="Home" asp-action="GetStarted" class="btn btn-primary">Bắt đầu ngay <i data-lucide="arrow-right"></i></a>
             </nav>
-                    </div>
+        </div>
     </header>
 
     <main>
@@ -33,95 +34,69 @@
             <div class="container hero-container">
                 <div class="hero-content">
                     <div class="badge">
-                        <i data-lucide="check-circle-2"></i> Nền tảng thi trực tuyến hàng đầu
-            </div>
+                        <i data-lucide="award"></i> Nền tảng thi trực tuyến hàng đầu
+                    </div>
                     <h1>Hệ thống Thi Trực Tuyến và Đánh Giá Năng Lực</h1>
                     <p>Giải pháp toàn diện cho việc tạo đề thi, tổ chức thi trực tuyến và đánh giá năng lực học sinh một cách chuyên nghiệp và hiệu quả.</p>
 
                     <div class="hero-buttons">
-                        <a href="#" class="btn btn-primary">Bắt đầu ngay <i data-lucide="arrow-right"></i></a>
+                        <a asp-controller="Home" asp-action="GetStarted" class="btn btn-primary">Bắt đầu ngay <i data-lucide="arrow-right"></i></a>
                         <a href="#" class="btn btn-outline">Xem demo</a>
-                </div>
-                <h1 class="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                    Đánh giá năng lực
-                    <br />
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                        Phát triển tương lai
-                    </span>
-                </h1>
-                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                    Nền tảng thi trắc nghiệm thông minh giúp học sinh, sinh viên đánh giá năng lực học tập,
-                    theo dõi tiến độ và phát triển kỹ năng một cách hiệu quả.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <a asp-controller="Home" asp-action="GetStarted"
-                       class="inline-flex items-center justify-center rounded-md text-sm font-medium h-12 px-8 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white">
-                        Bắt đầu ngay
-                        <i data-lucide="arrow-right" class="ml-2 w-5 h-5"></i> <!--Thẻ <i> cho ICON-->
-                    </a>
-                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-12 px-8">
-                        Tìm hiểu thêm
-                    </button>
-                </div>
+                    </div>
 
                     <div class="hero-stats">
                         <div class="stat">
                             <h3>10K+</h3>
                             <p>Thí sinh</p>
-                    </div>
+                        </div>
                         <div class="stat">
                             <h3>500+</h3>
                             <p>Giáo viên</p>
-                    </div>
+                        </div>
                         <div class="stat">
                             <h3>50K+</h3>
                             <p>Đề thi</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
                 <div class="hero-image">
                     <div class="mockup-card">
                         <div class="mockup-header">
                             <div class="mockup-icon"><i data-lucide="check-circle-2"></i></div>
-                                <div>
+                            <div>
                                 <h4>Kiểm tra năng lực</h4>
                                 <span>Đang tiến hành</span>
-                                </div>
                             </div>
+                        </div>
                         <div class="mockup-progress">
                             <div class="progress-info">
                                 <span>Hoàn thành</span>
                                 <span>75%</span>
-                                </div>
+                            </div>
                             <div class="progress-bar"><div class="progress-fill"></div></div>
-                                </div>
+                        </div>
                         <div class="mockup-details">
                             <div class="detail-box">
                                 <span>Câu hỏi</span>
                                 <strong>30/40</strong>
-                                    </div>
+                            </div>
                             <div class="detail-box">
                                 <span>Thời gian</span>
                                 <strong class="text-green">25:30</strong>
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="absolute -top-4 -right-4 w-72 h-72 bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full blur-3xl opacity-30 -z-10"></div>
-                <div class="absolute -bottom-8 -left-8 w-64 h-64 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full blur-3xl opacity-30 -z-10"></div>
             </div>
-        </div>
-    </section>
+        </section>
 
         <section id="features" class="features">
             <div class="container">
                 <div class="section-header">
                     <h2>Tính năng nổi bật</h2>
                     <p>Hệ thống được thiết kế để đáp ứng mọi nhu cầu trong quá trình tổ chức và quản lý kỳ thi</p>
-        </div>
+                </div>
 
                 <div class="features-grid">
                     <div class="feature-card">
@@ -133,24 +108,17 @@
                         <div class="feature-icon bg-green-light text-green"><i data-lucide="laptop"></i></div>
                         <h3>Thi trực tuyến</h3>
                         <p>Tổ chức kỳ thi trực tuyến an toàn với giám sát tự động và chống gian lận.</p>
-                </div>
-            </div>
-
-            <div class="bg-white border-0 shadow-lg hover:shadow-xl transition-shadow rounded-xl">
-                <div class="p-8">
-                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
-                        <i data-lucide="clock" class="w-7 h-7 text-purple-600"></i> <!--Thẻ <i> cho ICON-->
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon bg-purple-light text-purple"><i data-lucide="bar-chart-2"></i></div>
                         <h3>Báo cáo chi tiết</h3>
                         <p>Phân tích kết quả thi với biểu đồ trực quan và thống kê toàn diện.</p>
-                </div>
+                    </div>
                     <div class="feature-card">
                         <div class="feature-icon bg-red-light text-red"><i data-lucide="shield-check"></i></div>
                         <h3>Bảo mật cao</h3>
                         <p>Hệ thống bảo mật đa lớp đảm bảo an toàn thông tin và kết quả thi.</p>
-            </div>
+                    </div>
                     <div class="feature-card">
                         <div class="feature-icon bg-yellow-light text-yellow"><i data-lucide="zap"></i></div>
                         <h3>Chấm điểm tự động</h3>
@@ -160,52 +128,44 @@
                         <div class="feature-icon bg-blue-light text-blue"><i data-lucide="users"></i></div>
                         <h3>Quản lý người dùng</h3>
                         <p>Quản lý thí sinh, giáo viên và phân quyền linh hoạt theo vai trò.</p>
+                    </div>
                 </div>
             </div>
-
-        </div>
-    </section>
+        </section>
 
         <section id="about" class="about">
             <div class="container">
                 <div class="section-header">
                     <h2>Về EduTest Pro</h2>
                     <p>EduTest Pro là nền tảng thi trực tuyến và đánh giá năng lực hàng đầu, được thiết kế đặc biệt cho các trường học và tổ chức giáo dục. Chúng tôi cam kết mang đến giải pháp công nghệ hiện đại, giúp nâng cao chất lượng giảng dạy và học tập.</p>
-                    </div>
+                </div>
                 <div class="about-stats">
                     <div class="stat-item">
                         <h3>5+</h3>
                         <p>Năm kinh nghiệm</p>
-                </div>
+                    </div>
                     <div class="stat-item">
                         <h3>100+</h3>
                         <p>Trường học tin dùng</p>
-            </div>
+                    </div>
                     <div class="stat-item">
                         <h3>99.9%</h3>
                         <p>Độ tin cậy</p>
                     </div>
-                    <div class="absolute -top-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                        <span class="text-white font-bold text-sm">2</span>
-                    </div>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Chọn bài thi</h3>
-                <p class="text-gray-600">Lựa chọn bài thi phù hợp với mục tiêu của bạn</p>
             </div>
-
-        </div>
-    </section>
+        </section>
     </main>
 
     <footer class="footer">
         <div class="container footer-grid">
             <div class="footer-brand">
                 <div class="logo">
-                    <div class="logo-icon bg-white text-blue"><i data-lucide="graduation-cap"></i></div>
-                    <span class="logo-text text-white">EduTest Pro</span>
-                    </div>
-                <p>Giải pháp thi trực tuyến và đánh giá năng lực hàng đầu cho giáo dục hiện đại.</p>
+                    <div class="logo-icon"><i data-lucide="graduation-cap"></i></div>
+                    <span class="logo-text">EduTest Pro</span>
                 </div>
+                <p>Giải pháp thi trực tuyến và đánh giá năng lực hàng đầu cho giáo dục hiện đại.</p>
+            </div>
             <div class="footer-links">
                 <h4>Liên kết nhanh</h4>
                 <ul>
@@ -213,8 +173,8 @@
                     <li><a href="#">Tính năng</a></li>
                     <li><a href="#">Bảng giá</a></li>
                     <li><a href="#">Hỗ trợ</a></li>
-                    </ul>
-                </div>
+                </ul>
+            </div>
             <div class="footer-links">
                 <h4>Tài nguyên</h4>
                 <ul>
