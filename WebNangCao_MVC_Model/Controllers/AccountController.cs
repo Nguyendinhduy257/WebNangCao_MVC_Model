@@ -12,6 +12,7 @@ namespace WebNangCao_MVC_Model.Controllers
         // 1. KHAI BÁO CÁC DEPENDENCY (DỊCH VỤ CẦN DÙNG TỪ HỆ THỐNG)
         private readonly IValidator<LoginViewModel> _loginValidator;
         private readonly IValidator<RegisterViewModel> _registerValidator;
+        private readonly AppDbContext _context;
 
         //khai báo DB ConText
         // _context là kế thừa từ AppDbContext, có nhiệm vụ kết nối và thao tác với Database PostgreSQL

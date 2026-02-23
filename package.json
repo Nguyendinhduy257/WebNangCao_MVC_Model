@@ -1,0 +1,28 @@
+{
+  "name": "webnangcao_mvc_model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nguyendinhduy257/WebNangCao_MVC_Model.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Nguyendinhduy257/WebNangCao_MVC_Model/issues"
+  },
+  "homepage": "https://github.com/Nguyendinhduy257/WebNangCao_MVC_Model#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  },
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./Styles/app.css -o ./WebNangCao_MVC_Model/wwwroot/css/site.css",
+    "watch": "npx @tailwindcss/cli -i ./Styles/app.css -o ./WebNangCao_MVC_Model/wwwroot/css/site.css --watch"
+  }
+}
