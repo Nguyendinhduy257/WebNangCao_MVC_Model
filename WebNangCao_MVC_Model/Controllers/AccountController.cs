@@ -23,7 +23,6 @@ namespace WebNangCao_MVC_Model.Controllers
         // ----->_context.Users: truy cập vào bảng Users trong Database thông qua DbSet<User> Users đã khai báo trong AppDbContext
         // ----->FirstOrDefault: tìm kiếm bản ghi đầu tiên thỏa mãn
 
-        private readonly AppDbContext _context;
 
         //bơm(Inject) DB ConText vào Constructor
 
