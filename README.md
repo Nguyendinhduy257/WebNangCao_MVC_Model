@@ -1,3 +1,4 @@
+Tác giả: Dương Tiến Chiến, Nguyễn Đình Duy, Lê Công Đức
 - Các câu lệnh Git quan trọng:
 git clone <URL>
 git status : xem trạng thái file
