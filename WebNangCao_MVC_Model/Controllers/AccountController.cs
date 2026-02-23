@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using WebNangCao_MVC_Model.Data;
+using FluentValidation;
 using FluentValidation.Results; // Để dùng ValidationResult
 using Microsoft.AspNetCore.Mvc;
 using WebNangCao_MVC_Model.Models;
@@ -10,12 +12,14 @@ namespace WebNangCao_MVC_Model.Controllers
         // Khai báo Validator
         private readonly IValidator<LoginViewModel> _loginValidator;
         private readonly IValidator<RegisterViewModel> _registerValidator;
+        private readonly AppDbContext _context;
 
         // Constructor Injection
-        public AccountController(IValidator<LoginViewModel> loginValidator, IValidator<RegisterViewModel> registerValidator)
+        public AccountController(IValidator<LoginViewModel> loginValidator, IValidator<RegisterViewModel> registerValidator, AppDbContext context)
         {
             _loginValidator = loginValidator;
             _registerValidator = registerValidator;
+            _context = context;
         }
 
         //public IActionResult Index()
@@ -57,14 +61,25 @@ namespace WebNangCao_MVC_Model.Controllers
             }
 
             // 2. Logic nghiệp vụ (Kiểm tra DB...)
-            if (model.Login.UsernameOrEmail == "admin" && model.Login.Password == "123456")
+            //THIS CODE SHOULD BE TERMINATED BROS
+            /*if (model.Login.UsernameOrEmail == "admin" && model.Login.Password == "123456")
             {
                 return RedirectToAction("Index", "Home");
+            }*/
+            var user = _context.Users.FirstOrDefault(u => 
+            (u.Username == model.Login.UsernameOrEmail || u.Email == model.Login.UsernameOrEmail) 
+            && u.PasswordHash == model.Login.Password
+            );
+            if (user != null)
+            {
+                return RedirectToAction("Index","Home");
             }
-
-            ModelState.AddModelError("Login.Password", "Tài khoản hoặc mật khẩu sai");
-            model.ActiveTab = "login";
-            return View("Index", model);
+            else 
+            {
+                ModelState.AddModelError("Login.Password", "Tài khoản hoặc mật khẩu sai");
+                model.ActiveTab = "login";
+                return View("Index", model);
+            }
         }
 
         [HttpPost]
