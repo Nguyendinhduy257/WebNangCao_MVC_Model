@@ -11,7 +11,9 @@ namespace WebNangCao_MVC_Model.Validators
         public LoginValidator()
         {
             RuleFor(x => x.UsernameOrEmail)
-                .NotEmpty().WithMessage("Vui lòng nhập email hoặc tên đăng nhập");
+                .NotEmpty().WithMessage("Vui lòng nhập email hoặc tên đăng nhập")
+                .MaximumLength(50).WithMessage("Tài khoản quá dài, vui lòng nhập ít lại !")
+                .Matches(@"^\S+$").WithMessage("Tài khoản không được chứa khoảng trắng");
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Vui lòng nhập mật khẩu");

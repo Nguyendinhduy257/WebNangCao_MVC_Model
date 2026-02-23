@@ -13,7 +13,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => 
+{
+    // Bịt miệng thằng .NET, không cho nó tự động quăng lỗi tiếng Anh
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
 
 
 //Cấu hình FluentValidation
