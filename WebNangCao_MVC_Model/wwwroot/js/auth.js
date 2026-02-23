@@ -36,7 +36,7 @@ function toggleRoleList() {
 }
 
 // 2. Hàm chọn vai trò
-function selectRole(event, value, text, iconName) {
+function selectRole(value, text, iconName) {
     // a. Cập nhật giao diện hiển thị
     document.getElementById('current-role-text').innerText = text;
 
@@ -60,7 +60,9 @@ function selectRole(event, value, text, iconName) {
     if (inputRegister) inputRegister.value = value;
 
     // d. Ngăn sự kiện nổi bọt (để không kích hoạt toggleRoleList lần nữa)
-    event.stopPropagation();
+    if (window.event) {
+        window.event.stopPropagation();
+    }
 
     // e. Đóng dropdown
     toggleRoleList();
