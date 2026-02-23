@@ -38,3 +38,4 @@ git checkout Chien
 
 //merge main vào branch đó (lặp lại với branch khác)
 git merge main
+git push //push để cập nhật merge lên github
