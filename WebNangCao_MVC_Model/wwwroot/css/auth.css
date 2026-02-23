@@ -40,14 +40,15 @@ body {
 
 /* Khung chứa chính (Card) */
 .auth-container {
-    background-color: rgba(255, 255, 255, 0.95); /* Màu trắng độ trong suốt 95% */
-    backdrop-filter: blur(10px); /* Làm mờ nền đằng sau lưng nó */
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     width: 420px;
     padding: 30px;
-    border-radius: 16px; /* Bo góc tròn hơn chút */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* Đổ bóng sâu hơn */
-    border: 1px solid rgba(255, 255, 255, 0.5); /* Viền sáng nhẹ */
-    position: relative;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
 }
 
 /* Phần Header (Logo & Tiêu đề) */
@@ -258,10 +259,6 @@ body {
     margin-bottom: 15px;
 }
 
-.hidden {
-    display: none !important;
-}
-
 .validation-summary-errors ul {
     list-style: none;
     padding: 10px;
@@ -283,12 +280,10 @@ body {
 /* 2. Đẩy Role Wrapper ra ngoài bằng số ÂM */
 .role-wrapper {
     position: absolute;
-    /* Đẩy lên trên đầu thẻ Card khoảng 50px */
-    top: 1px;
-    /* Căn thẳng hàng với mép trái của Card */
-    left: -125px;
+    top: 10px; 
+    left: 10px;
     z-index: 100;
-    margin: 0;
+    margin: 0 ;
 }
 
 /* 3. Tinh chỉnh lại nút hiển thị cho nổi bật trên nền Gradient */
@@ -306,6 +301,7 @@ body {
     border-radius: 30px; /* Bo tròn hẳn */
     font-size: 13px;
     color: #374151;
+    border: 1px solid black;
     cursor: pointer;
     /* Đổ bóng đậm hơn vì giờ nó nằm lơ lửng */
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
@@ -363,6 +359,7 @@ body {
 
     background-color: white;
     border: 1px solid #e5e7eb;
+    border: 1px solid black;
     border-radius: 12px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     list-style: none;

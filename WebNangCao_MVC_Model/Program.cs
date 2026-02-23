@@ -43,6 +43,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 // 1. ƯU TIÊN CAO NHẤT: Route dành cho Areas (Admin, Teacher)
 // Phải đặt lên đầu để hệ thống check xem "Có phải đang vào Admin không?" trước

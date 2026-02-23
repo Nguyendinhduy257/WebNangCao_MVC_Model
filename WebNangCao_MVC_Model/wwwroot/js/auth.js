@@ -60,7 +60,9 @@ function selectRole(value, text, iconName) {
     if (inputRegister) inputRegister.value = value;
 
     // d. Ngăn sự kiện nổi bọt (để không kích hoạt toggleRoleList lần nữa)
-    event.stopPropagation();
+    if (window.event) {
+        window.event.stopPropagation();
+    }
 
     // e. Đóng dropdown
     toggleRoleList();
