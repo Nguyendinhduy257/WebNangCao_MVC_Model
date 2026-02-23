@@ -1,0 +1,18 @@
+@model WebNangCao_MVC_Model.Models.AdminDashboradViewModel;
+@{
+    ViewData["Title"] = "Quản Trị Viên";
+}
+<!-- Thiết lập khung giữa trong trang web quản trị viên -->
+<div class = "flex h-screen justify-center items-center">
+    <!-- Tạo khoảng trống cho các thẻ h1 (w-full && max-w-5xl) và cho 1 bên thẻ h1 và 1 bên button -->
+    <div class = "w-full max-w-5xl flex justify-between mt-6">
+        <!-- Tạo hàng dọc cho các thẻ h1 tiêu đề -->
+        <div class = "flex flex-col">
+            <h1 class = "text-2xl font-bold mb-2">Dashboard Quản trị viên</h1>
+            <h1>Quản lý và giám sát toàn bộ hệ thống</h1>
+        </div>
+        <button class = "bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+            Cài Đặt Hệ Thống 
+        </button>
+    </div>
+</div>
