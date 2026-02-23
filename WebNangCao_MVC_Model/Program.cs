@@ -1,8 +1,16 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using WebNangCao_MVC_Model.Validators;
+using WebNangCao_MVC_Model.Data;
+using Microsoft.EntityFrameworkCore; //Dùng để cấu hình DbContext với PostgreSQL
 //using static WebNangCao_MVC_Model.Validators.AuthValidators;
 var builder = WebApplication.CreateBuilder(args);
+
+//----Đọc chuỗi kết nối  Database từ file json----
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//đăng ký dịch vụ DataBase với PostGreSQL
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
