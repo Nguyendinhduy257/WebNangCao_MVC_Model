@@ -14,9 +14,17 @@ namespace WebNangCao_MVC_Model.Controllers
         private readonly IValidator<RegisterViewModel> _registerValidator;
 
         //khai báo DB ConText
+        // _context là kế thừa từ AppDbContext, có nhiệm vụ kết nối và thao tác với Database PostgreSQL
+
+        //var user = _context.Users.FirstOrDefault(u => (u.Username == model.Login.UsernameOrEmail ||
+        // u.Email == model.Login.UsernameOrEmail)
+        //&& u.PasswordHash == model.Login.Password);
+        // ----->_context.Users: truy cập vào bảng Users trong Database thông qua DbSet<User> Users đã khai báo trong AppDbContext
+        // ----->FirstOrDefault: tìm kiếm bản ghi đầu tiên thỏa mãn
+
         private readonly AppDbContext _context;
 
-        //bơm(Ịnect) DB ConText vào Constructor
+        //bơm(Inject) DB ConText vào Constructor
 
         // 2. CONSTRUCTOR INJECTION
         // Hệ thống (thông qua file Program.cs) sẽ tự động "bơm" (inject) 2 cái Validator vào đây
