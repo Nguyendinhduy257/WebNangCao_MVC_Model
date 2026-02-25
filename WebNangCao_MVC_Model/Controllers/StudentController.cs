@@ -4,11 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using WebNangCao_MVC_Model.Data;
 using WebNangCao_MVC_Model.Models;
 using WebNangCao_MVC_Model.ViewModels;
+using System.Security.Claims; //Dùng để lấy thông tin UserId từ Claims khi đã đăng nhập
+using Microsoft.AspNetCore.Authentication; //Dùng để gọi SignInAsync, SignOutAsync khi đăng nhập/đăng xuất
+using Microsoft.AspNetCore.Authentication.Cookies; //Dùng để gọi CookieAuthenticationDefaults
 // Nhớ using thư viện chứa Models của bạn (Ví dụ: Exam, ExamResult...)
 namespace WebNangCao_MVC_Model.Controllers
 {
     // Tên class bắt buộc phải có chữ "Controller" ở cuối
-    //[Authorize] //yêu cầu người dùng phải đăng nhập mới được truy cập vào các Action trong controller này
+    [Authorize] //yêu cầu người dùng phải đăng nhập mới được truy cập vào các Action trong controller này
     public class StudentController : Controller
     {
         private readonly AppDbContext _context;
@@ -19,33 +22,38 @@ namespace WebNangCao_MVC_Model.Controllers
         // Tên hàm (Action) phải TRÙNG với tên file View (Dashboard)
         public IActionResult Dashboard()
         {
-            //lấy ID current user đang đăng nhập
-            /*
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            if(string.IsNullOrEmpty(userId))
+            // ==========================================
+            // 👤 LẤY ID CỦA SINH VIÊN ĐANG ĐĂNG NHẬP
+            // ==========================================
+            // Lệnh FindFirstValue sẽ tự động lôi cái NameIdentifier (chính là user.Id)
+            // mà chúng ta đã cất vào Cookie ở bên AccountController ra.
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Bắt lỗi an toàn: Nếu vì lý do nào đó mất ID, đuổi về trang đăng nhập
+            if (string.IsNullOrEmpty(userIdString))
             {
-                return RedirectToAction("Login", "Account"); // Nếu không lấy được UserId, chuyển hướng về trang đăng nhập
+                return RedirectToAction("Index", "Account"); 
             }
-            int studentId = int.Parse(userId); // Chuyển UserId từ string sang int 
-            */
+
+            // Ép kiểu từ chuỗi sang số nguyên (int) để so sánh với Database
+            int studentId = int.Parse(userIdString);
 
 
-            //Gán cứng ID của 1 sinh viên có sẵn trong Database để test
-            int studentId = 1;
-
-
-            //truy vấn database để lấy thông tin dashboard của sinh viên
-            var model=new StudentDashboardViewModel();
-            // Gán từng thuộc tính
+            // ==========================================
+            // 📊 TRUY VẤN DỮ LIỆU THẬT TỪ DATABASE
+            // ==========================================
+            var model = new StudentDashboardViewModel();
+            
             model.TotalExams = _context.Exams.Count(e => e.IsActive);
+            
+            // Giờ đây, truy vấn sẽ lấy ĐÚNG điểm của sinh viên đang đăng nhập (studentId)
             model.CompletedExams = _context.ExamResults.Count(r => r.StudentId == studentId);
 
-            // Lấy danh sách kết quả trước để tính điểm trung bình
             var results = _context.ExamResults.Where(r => r.StudentId == studentId);
             model.AverageScore = results.Any() ? Math.Round(results.Average(r => r.Score), 1) : 0;
 
             model.UpcomingExams = _context.Exams.Count(e => e.StartTime > DateTime.UtcNow);
-            // Lệnh View() này sẽ tự động đi tìm file: Views/Student/Dashboard.cshtml
+            
             return View(model);
         }
         // Hàm này chỉ dùng để tạo dữ liệu mẫu chạy thử

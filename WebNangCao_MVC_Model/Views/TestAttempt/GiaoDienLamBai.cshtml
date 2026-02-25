@@ -2,4 +2,158 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Làm bài thi";
+    Layout = null;
 }
+<!DOCTYPE html>
+    <html lang="vi">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewData["Title"]</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="stylesheet" href="~/css/GiaoDienLamBai.css" />
+    </head> 
+    <body>
+    <header class="test-header">
+        <div class="header-title">
+            <h1>Kiểm tra Toán học Học kỳ 1</h1>
+            <p>Toán học</p>
+        </div>
+        <div class="header-actions">
+            <div class="timer-badge">
+                <i data-lucide="clock" width="20" height="20"></i>
+                <span id="countdownDisplay">00:00</span>
+            </div>
+            <button class="btn-submit" onclick="submitExam()">
+                <i data-lucide="send" width="16" height="16"></i>
+                <span>Nộp bài</span>
+            </button>
+        </div>
+    </header>
+    <main class="test-container">
+
+        <div class="main-content">
+
+            <div class="card">
+                <div class="progress-header">
+                    <span>Tiến độ: 0/10 câu</span>
+                    <span class="percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="question-header">
+                    <div class="question-title-wrapper">
+                        <div class="question-number">1</div>
+                        <div class="question-title">
+                            <h2>Câu hỏi 1</h2>
+                            <span class="badge-difficulty">Dễ</span>
+                        </div>
+                    </div>
+                    <button class="btn-flag" title="Đánh dấu xem lại">
+                        <i data-lucide="flag" width="20" height="20"></i>
+                    </button>
+                </div>
+
+                <div class="question-text">
+                    Phương trình bậc hai x² - 5x + 6 = 0 có nghiệm là:
+                </div>
+
+                <div class="answer-list">
+                    <label class="answer-option">
+                        <input type="radio" name="question1" value="A">
+                        <span>A. x = 1 hoặc x = 6</span>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="question1" value="B">
+                        <span>B. x = 2 hoặc x = 3</span>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="question1" value="C">
+                        <span>C. x = -2 hoặc x = -3</span>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="question1" value="D">
+                        <span>D. x = 1 hoặc x = 5</span>
+                    </label>
+                </div>
+
+                <div class="question-nav">
+                    <button class="btn-nav" disabled>
+                        <i data-lucide="chevron-left" width="18" height="18"></i> Câu trước
+                    </button>
+                    <span style="color: var(--text-muted); font-size: 14px; font-weight: 500;">1 / 10</span>
+                    <button class="btn-nav">
+                        Câu sau <i data-lucide="chevron-right" width="18" height="18"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar card">
+            <h3>Danh sách câu hỏi</h3>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active">Tất cả</button>
+                <button class="filter-tab">Đã làm</button>
+                <button class="filter-tab">Đánh dấu</button>
+            </div>
+
+            <div class="question-grid">
+                <button class="grid-item active">1</button>
+                <button class="grid-item">2</button>
+                <button class="grid-item">3</button>
+                <button class="grid-item">4</button>
+                <button class="grid-item">5</button>
+                <button class="grid-item">6</button>
+                <button class="grid-item">7</button>
+                <button class="grid-item">8</button>
+                <button class="grid-item">9</button>
+                <button class="grid-item">10</button>
+            </div>
+
+            <div class="legend-list">
+                <div class="legend-item">
+                    <div class="legend-left">
+                        <div class="legend-box box-answered"></div>
+                        <span>Đã trả lời</span>
+                    </div>
+                    <span class="legend-count">0</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-left">
+                        <div class="legend-box box-unanswered"></div>
+                        <span>Chưa trả lời</span>
+                    </div>
+                    <span class="legend-count">10</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-left">
+                        <i data-lucide="flag" width="14" height="14" style="color: var(--warning-color); fill: var(--warning-color)"></i>
+                        <span>Đánh dấu</span>
+                    </div>
+                    <span class="legend-count">0</span>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function submitExam() {
+            if(confirm("Bạn có chắc chắn muốn nộp bài không?")) {
+                alert("Đang xử lý nộp bài...");
+                // Gọi API hoặc submit form tại đây
+            }
+        }
+    </script>
+    <script src="~/js/GiaoDienLamBai.js"></script>
+    </body>
+    </html>

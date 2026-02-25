@@ -21,7 +21,11 @@
             <div class="user-info">
                 <span class="greeting">Xin chào, </span>
                 <!--sử dụng tên là tên Username-->
-                <span class="user-name">Nguyễn Văn A</span>
+                @if (User.Identity!=null &&User.Identity.IsAuthenticated)
+                {
+                <span class="user-name">@User.Identity.Name</span>
+                }
+                
                 <!--Sử avater là avatar của username--></>
                 <div class="avatar-container">
                     <div class="avatar" id="userAvatar">N</div>
@@ -35,7 +39,13 @@
                             <li><a href="#"><i data-lucide="user"></i> Hồ sơ cá nhân</a></li>
                             <li><a href="#"><i data-lucide="settings"></i> Cài đặt</a></li>
                             <li class="divider"></li>
-                            <li><a href="/Account/Logout" class="text-danger"><i data-lucide="log-out"></i> Đăng xuất</a></li>
+                        <li>
+                            <a href="/Account/Logout" 
+                               onclick="return confirm('Bạn có chắc chắn muốn đăng xuất?');" 
+                               class="text-danger">
+                                <i data-lucide="log-out"></i> Đăng xuất
+                            </a>
+                        </li>
                         </ul>
                     </div>
                 </div>

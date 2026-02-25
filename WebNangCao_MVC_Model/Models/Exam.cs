@@ -6,6 +6,8 @@
         public string Title { get; set; } = string.Empty;
         public bool IsActive { get; set; }
         public DateTime StartTime { get; set; }
+        public int Duration { get; set; }
+        public ICollection<Question> Questions { get; set; } = new List<Question>();
         // ... các thuộc tính khác
     }
 }

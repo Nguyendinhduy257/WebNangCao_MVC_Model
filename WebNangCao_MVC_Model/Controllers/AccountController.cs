@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using WebNangCao_MVC_Model.Models;
 using WebNangCao_MVC_Model.Data; //để gọi AppDBContext
 using System.Linq; //Để dùng FirstOrDefault, Any
+using System.Security.Claims; //Dùng để lấy thông tin UserId từ Claims khi đã đăng nhập
+using Microsoft.AspNetCore.Authentication; //Dùng để gọi SignInAsync, SignOutAsync khi đăng nhập/đăng xuất
+using Microsoft.AspNetCore.Authentication.Cookies; //Dùng để gọi CookieAuthenticationDefaults
 
 namespace WebNangCao_MVC_Model.Controllers
 {
@@ -63,7 +66,7 @@ namespace WebNangCao_MVC_Model.Controllers
         // KHU VỰC XỬ LÝ DỮ LIỆU GỬI LÊN (POST)
 
         [HttpPost]
-        public IActionResult Login(AuthViewModels model, string Role)
+        public async Task<IActionResult> Login(AuthViewModels model, string Role)
         {
             // BƯỚC 1: KIỂM TRA LỖI NHẬP LIỆU (VALIDATION)
             ValidationResult result = _loginValidator.Validate(model.Login);
@@ -81,7 +84,7 @@ namespace WebNangCao_MVC_Model.Controllers
                 return View("Index", model); // Trả lại giao diện kèm thông báo lỗi
             }
 
-            //Bước 3: truy vấn PsstGreSQL để đăng nhập
+            //Bước 2: truy vấn PsstGreSQL để đăng nhập
             //tìm user có username hoặc email khớp với dữ liệu nhập vào
             //so sánh mật khẩu đúng
             var user = _context.Users.FirstOrDefault(u => (u.Username == model.Login.UsernameOrEmail || u.Email == model.Login.UsernameOrEmail)
@@ -89,8 +92,31 @@ namespace WebNangCao_MVC_Model.Controllers
             //nếu tìm thấy tài khoản hợp lệ
             if (user != null)
             {
+                //so sánh Role trên giao diện Front-End với Role lưu trong Database (user.Role)
+                if (user.Role != Role)
+                {
+                    //nếu không khớp với Role thì đẩy ra lỗi
+                    ModelState.AddModelError("Login.Password", "Tài khoản của bạn không thuộc vai trò này. Vui lòng chọn đúng vai trò");
+                    model.ActiveTab = "login";
+                    return View("Index", model);
+                }
                 //lấy Role trực tiếp từ Database của user đó
                 string currentRole = user.Role ?? "student"; //mặc định là student
+                //tạo thẻ căn cước (Claims lưu vào COOKIE)
+                var claims=new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), //Lưu UserId để sau này còn truy xuất dữ liệu theo UserId
+                    new Claim(ClaimTypes.Name, user.FullName), //Lưu FullName để hiển thị trên giao diện
+                    new Claim(ClaimTypes.Role, currentRole) //Lưu Role để phân quyền truy cập các trang sau này
+                };
+                //đăng nhập và lưu Cookie xuống trình duyệt
+                var clamsIdentity=new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true //nhớ đăng nhập (F5 không bị văng về login)
+                };
+                //Đăng nhập và lưu Cookie xuống trình duyệt
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(clamsIdentity), authProperties);
                 if (currentRole == "student")
                 {
                     //Controller="Student", hàm trong controller = "Dashboard"
@@ -109,8 +135,9 @@ namespace WebNangCao_MVC_Model.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(AuthViewModels model)
+        public async Task<IActionResult> Register(AuthViewModels model)
         {
+
             // BƯỚC 1: KIỂM TRA LỖI FORM ĐĂNG KÝ
             ValidationResult result = _registerValidator.Validate(model.Register);
 
@@ -147,7 +174,21 @@ namespace WebNangCao_MVC_Model.Controllers
             // Lưu xuống Database
             _context.Users.Add(newUser);
             _context.SaveChanges();
-
+            //tạo thẻ căn cước (Claims lưu vào COOKIE) sau khi đăng ký xong
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()), //Lưu UserId để sau này còn truy xuất dữ liệu theo UserId
+                new Claim(ClaimTypes.Name, newUser.FullName), //Lưu FullName để hiển thị trên giao diện
+                new Claim(ClaimTypes.Role, newUser.Role) //Lưu Role để phân quyền truy cập các trang sau này
+            };
+            //đăng nhập và lưu Cookie xuống trình duyệt
+            var clamsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true //nhớ đăng nhập (F5 không bị văng về login)
+            };
+            //Đăng nhập và lưu Cookie xuống trình duyệt
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(clamsIdentity), authProperties);
             // Đăng ký xong, điều hướng vào thẳng Dashboard tương ứng
             if (newUser.Role == "student")
             {
@@ -157,6 +198,17 @@ namespace WebNangCao_MVC_Model.Controllers
             {
                 return RedirectToAction("Dashboard", "Instructor");
             }
+        }
+        //Thủ tục khi Đăng xuất tài khoản và tiêu hủy Cookie
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            // 1. LỆNH XÓA COOKIE
+            // Lệnh này ra chỉ thị cho trình duyệt: "Hãy xóa sạch chiếc Cookie xác thực của trang web này đi"
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            // 2. Sau khi thẻ Cookie đã bị hủy, ta mới điều hướng người dùng về lại màn hình Đăng nhập (Tab Login)
+            return RedirectToAction("Index", "Account");
         }
     }
 }

@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using WebNangCao_MVC_Model.Validators;
 using WebNangCao_MVC_Model.Data;
 using Microsoft.EntityFrameworkCore; //Dùng để cấu hình DbContext với PostgreSQL
+using Microsoft.AspNetCore.Authentication.Cookies; //Dùng để cấu hình Cookie Authentication
 //using static WebNangCao_MVC_Model.Validators.AuthValidators;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,14 @@ builder.Services.AddControllersWithViews(options =>
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 });
 
+//Cấu hình Cookie Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "WebNangCaoCookie";
+        options.LoginPath = "/Account/Index"; // Nếu chưa đăng nhập mà lén vào trang cấm, sẽ bị đuổi về đây
+        options.AccessDeniedPath = "/Account/AccessDenied"; // Đi sai luồng (VD Học viên ráng vào trang Giảng viên)
+    });
 
 //Cấu hình FluentValidation
 builder.Services.AddFluentValidationAutoValidation(); // Tự động validate
@@ -42,8 +51,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-app.UseAuthentication();
+app.UseAuthentication(); // 1. Khám xét người dùng (Đọc thẻ Cookie xem là ai)
+app.UseAuthorization();  // 2. Kiểm tra quyền hạn (Có được phép vào trang này không)
 
 // 1. ƯU TIÊN CAO NHẤT: Route dành cho Areas (Admin, Teacher)
 // Phải đặt lên đầu để hệ thống check xem "Có phải đang vào Admin không?" trước

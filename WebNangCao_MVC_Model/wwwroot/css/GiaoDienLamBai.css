@@ -1,0 +1,422 @@
+﻿/* ================= CÀI ĐẶT BIẾN MÀU SẮC (CSS VARIABLES) ================= */
+:root {
+    --primary-color: #3b82f6; /* Xanh dương */
+    --primary-light: #eff6ff;
+    --success-color: #16a34a; /* Xanh lá */
+    --success-light: #dcfce7;
+    --warning-color: #f97316; /* Cam */
+    --bg-body: #f8fafc; /* Nền trang xám nhạt */
+    --bg-card: #ffffff; /* Nền thẻ trắng */
+    --text-main: #1e293b; /* Chữ đen/xám đậm */
+    --text-muted: #64748b; /* Chữ xám nhạt */
+    --border-color: #e2e8f0; /* Viền xám */
+}
+
+/* ================= RESET & BASE ================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.5;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ================= HEADER ================= */
+.test-header {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-title h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.header-title p {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.timer-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid #bfdbfe;
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--success-color);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+    .btn-submit:hover {
+        background-color: #15803d;
+    }
+
+/* ================= MAIN LAYOUT ================= */
+.test-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px;
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 90px;
+}
+
+/* ================= CARD COMPONENT ================= */
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ================= PROGRESS BAR ================= */
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+}
+
+    .progress-header .percent {
+        color: var(--primary-color);
+    }
+
+.progress-track {
+    width: 100%;
+    background-color: #f1f5f9;
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    background-color: #bfdbfe;
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+/* ================= QUESTION AREA ================= */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.question-title-wrapper {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.question-number {
+    background-color: var(--primary-color);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.question-title h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.badge-difficulty {
+    background-color: var(--success-light);
+    color: var(--success-color);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.btn-flag {
+    color: var(--text-muted);
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+    .btn-flag:hover {
+        color: var(--warning-color);
+        border-color: var(--warning-color);
+    }
+
+.question-text {
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+/* Answers Options */
+.answer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.answer-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .answer-option:hover {
+        border-color: #60a5fa;
+        background-color: var(--primary-light);
+    }
+
+    .answer-option input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary-color);
+        cursor: pointer;
+    }
+
+/* Navigation Footer */
+.question-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    transition: 0.2s;
+}
+
+    .btn-nav:not(:disabled):hover {
+        background-color: #e2e8f0;
+    }
+
+    .btn-nav:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+/* ================= SIDEBAR (DANH SÁCH CÂU HỎI) ================= */
+.sidebar h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.filter-tabs {
+    display: flex;
+    background-color: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    gap: 4px;
+}
+
+.filter-tab {
+    flex: 1;
+    padding: 6px 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    border-radius: 6px;
+}
+
+    .filter-tab.active {
+        background-color: white;
+        color: var(--text-main);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+/* Grid hiển thị số câu hỏi */
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.grid-item {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--text-main);
+    transition: 0.2s;
+}
+
+    .grid-item:hover {
+        border-color: #60a5fa;
+    }
+
+    .grid-item.active {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .grid-item.answered {
+        background-color: var(--success-light);
+        border-color: var(--success-color);
+        color: var(--success-color);
+    }
+
+/* Legend (Chú thích) */
+.legend-list {
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.legend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.legend-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.legend-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+}
+
+.box-answered {
+    background-color: var(--success-light);
+    border: 1px solid var(--success-color);
+}
+
+.box-unanswered {
+    background-color: white;
+    border: 1px solid #cbd5e1;
+}
+
+.legend-count {
+    font-weight: 700;
+    color: var(--text-main);
+}
+/* TRẠNG THÁI ĐÁNH DẤU (FLAG) */
+/*lớp Class = Flagged chỉ được tạo ra khi sự kiện bên JavaScript phát hiện người dùng nhấn vào nút cắm cờ*/
+.btn-flag.active-flag {
+    color: var(--warning-color);
+    border-color: var(--warning-color);
+}
+
+    .btn-flag.active-flag svg {
+        fill: var(--warning-color); /* Tô màu kín lá cờ */
+    }
+
+.grid-item.flagged {
+    border: 2px solid var(--warning-color) !important; /* Viền cam đậm */
+    position: relative;
+}
+
+    /* Hiệu ứng chấm tròn cam ở góc phải ô vuông */
+    .grid-item.flagged::after { 
+        content: '';
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 10px;
+        height: 10px;
+        background-color: var(--warning-color);
+        border-radius: 50%;
+        border: 2px solid white;
+    }
