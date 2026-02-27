@@ -79,6 +79,13 @@ ul {
     border: 1px solid #bfdbfe;
 }
 
+    /* Khi sắp hết giờ (có thể dùng JS thêm class này) */
+    .timer-badge.danger {
+        background-color: #fee2e2;
+        color: #ef4444;
+        border-color: #fca5a5;
+    }
+
 .btn-submit {
     display: flex;
     align-items: center;
@@ -91,8 +98,13 @@ ul {
     transition: background 0.2s;
 }
 
-    .btn-submit:hover {
+    .btn-submit:hover:not(:disabled) {
         background-color: #15803d;
+    }
+
+    .btn-submit:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 
 /* ================= MAIN LAYOUT ================= */
@@ -144,17 +156,17 @@ ul {
 
 .progress-track {
     width: 100%;
-    background-color: #f1f5f9;
+    background-color: #e2e8f0; /* Chỉnh xám đậm hơn chút cho dễ nhìn */
     border-radius: 999px;
     height: 10px;
     overflow: hidden;
 }
 
 .progress-fill {
-    background-color: #bfdbfe;
+    background-color: var(--success-color); /* Đổi sang màu xanh lá khi có tiến độ */
     height: 100%;
     border-radius: 999px;
-    transition: width 0.3s ease;
+    transition: width 0.4s ease; /* Làm mượt hơn */
 }
 
 /* ================= QUESTION AREA ================= */
@@ -200,12 +212,24 @@ ul {
     display: inline-block;
 }
 
+    /* Màu Badge tùy theo độ khó (có thể dùng JS hoặc Razor thêm class) */
+    .badge-difficulty.medium {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+
+    .badge-difficulty.hard {
+        background-color: #fee2e2;
+        color: #ef4444;
+    }
+
 .btn-flag {
     color: var(--text-muted);
     padding: 8px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     transition: 0.2s;
+    background-color: transparent;
 }
 
     .btn-flag:hover {
@@ -234,11 +258,19 @@ ul {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    background-color: white;
 }
 
     .answer-option:hover {
         border-color: #60a5fa;
         background-color: var(--primary-light);
+    }
+
+    /* Highlight khi người dùng chọn đáp án */
+    .answer-option:has(input[type="radio"]:checked) {
+        border-color: var(--primary-color);
+        background-color: var(--primary-light);
+        font-weight: 500;
     }
 
     .answer-option input[type="radio"] {
@@ -278,6 +310,18 @@ ul {
     .btn-nav:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+        visibility: hidden; /* Ẩn luôn nút Câu trước ở câu 1 cho gọn */
+    }
+
+/* Nút Hoàn thành ở câu cuối cùng */
+.btn-finish {
+    background-color: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+}
+
+    .btn-finish:hover {
+        background-color: #15803d !important;
     }
 
 /* ================= SIDEBAR (DANH SÁCH CÂU HỎI) ================= */
@@ -337,16 +381,18 @@ ul {
         border-color: #60a5fa;
     }
 
+    /* Câu đang mở (Active) */
     .grid-item.active {
-        background-color: var(--primary-color);
-        color: white;
         border-color: var(--primary-color);
+        border-width: 2px;
+        box-shadow: 0 0 0 3px var(--primary-light);
     }
 
+    /* Câu đã trả lời (Answered) */
     .grid-item.answered {
-        background-color: var(--success-light);
-        border-color: var(--success-color);
-        color: var(--success-color);
+        background-color: var(--primary-color); /* Đổi xanh dương cho đồng bộ với UX thông thường */
+        border-color: var(--primary-color);
+        color: white;
     }
 
 /* Legend (Chú thích) */
@@ -379,8 +425,8 @@ ul {
 }
 
 .box-answered {
-    background-color: var(--success-light);
-    border: 1px solid var(--success-color);
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
 }
 
 .box-unanswered {
@@ -392,31 +438,276 @@ ul {
     font-weight: 700;
     color: var(--text-main);
 }
+
 /* TRẠNG THÁI ĐÁNH DẤU (FLAG) */
-/*lớp Class = Flagged chỉ được tạo ra khi sự kiện bên JavaScript phát hiện người dùng nhấn vào nút cắm cờ*/
 .btn-flag.active-flag {
     color: var(--warning-color);
     border-color: var(--warning-color);
+    background-color: #fff7ed;
 }
 
     .btn-flag.active-flag svg {
-        fill: var(--warning-color); /* Tô màu kín lá cờ */
+        fill: var(--warning-color);
     }
 
 .grid-item.flagged {
-    border: 2px solid var(--warning-color) !important; /* Viền cam đậm */
     position: relative;
 }
 
-    /* Hiệu ứng chấm tròn cam ở góc phải ô vuông */
-    .grid-item.flagged::after { 
-        content: '';
-        position: absolute;
-        top: -4px;
-        right: -4px;
-        width: 10px;
-        height: 10px;
-        background-color: var(--warning-color);
-        border-radius: 50%;
-        border: 2px solid white;
+.grid-item.flagged::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    background-color: var(--warning-color);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+/* ================= MODAL XÁC NHẬN NỘP BÀI ================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* Nền đen mờ hơn chút cho nổi bật */
+    backdrop-filter: blur(3px); /* Hiệu ứng làm mờ cảnh đằng sau (tùy chọn) */
+    /* 3 Dòng này dùng Flexbox để ép nội dung vào ngay chính giữa */
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+
+    z-index: 9999; /* Đảm bảo luôn nằm trên cùng che hết mọi thứ */
+}
+
+/* ================= MODAL CONTENT (NỘI DUNG HỘP THOẠI) ================= */
+.modal-content {
+    background-color: white;
+    border-radius: 16px; /* Bo góc tròn hơn một chút cho hiện đại */
+    width: 90%; /* Dùng 90% để không bị chạm viền trên điện thoại */
+    max-width: 420px; /* Độ rộng tối đa trên màn hình máy tính */
+    padding: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    /* Xóa margin mặc định nếu có để không bị lệch */
+    margin: 0;
+    /* Thêm hiệu ứng xuất hiện (Pop-up) */
+    animation: modalPopUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hiệu ứng Pop-up mượt mà */
+@keyframes modalPopUp {
+    0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(10px);
     }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+    .modal-header .icon-warning {
+        color: var(--warning-color);
+    }
+
+    .modal-header h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-main);
+        margin: 0;
+    }
+
+.modal-desc {
+    margin-bottom: 16px;
+    color: var(--text-main);
+    font-size: 16px;
+}
+
+.stats-box {
+    background-color: #f0f7ff; /* Xanh nhạt */
+    border: 1px solid #cce3fd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+    .stat-row .stat-value {
+        font-weight: 700;
+        color: var(--text-main);
+    }
+
+.warning-box {
+    background-color: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #c2410c;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+    .warning-box i {
+        color: var(--warning-color);
+        flex-shrink: 0;
+    }
+
+.modal-footer {
+    display: flex;
+    gap: 12px;
+}
+
+    .modal-footer button {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+    }
+
+.btn-cancel {
+    border: 1px solid var(--border-color);
+    background-color: white;
+    color: var(--text-main);
+}
+
+    .btn-cancel:hover {
+        background-color: #f8fafc;
+    }
+
+.btn-confirm-submit {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.btn-confirm-submit:hover {
+    background-color: #2563eb;
+}
+
+/* ================= MODAL KẾT QUẢ ================= */
+.result-content {
+    text-align: center;
+    padding: 32px 24px;
+}
+
+.success-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    background-color: var(--success-light);
+    color: var(--success-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.result-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+.result-header .text-muted {
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+/* Vòng tròn hiển thị điểm */
+.score-circle {
+    width: 120px;
+    height: 120px;
+    border: 6px solid var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    background-color: var(--primary-light);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.score-number {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.score-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-details {
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: var(--text-main);
+}
+
+.detail-value.text-success {
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+/* Nút chính giữa */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}

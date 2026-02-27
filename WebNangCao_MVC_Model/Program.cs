@@ -37,32 +37,49 @@ builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>(); // Tự 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+// gọi hàm NapDuLieuVaoDB.cs để nạp dữ liệu vào DB
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        //gọi hàm Seed có trong NapDuLieuDB.cs để nạp dữ liệu vào DB
+        NapDuLieuVaoDB.Seed(context);
+    }
+    catch (Exception ex)
+    {
+        // Log lỗi nếu có
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Lỗi khi nạp dữ liệu vào DB.");
+    }
 }
+    // Configure the HTTP request pipeline.
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler("/Home/Error");
+        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        app.UseHsts();
+    }
+    
+    app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+    app.UseStaticFiles();
 
-app.UseStaticFiles();
+    app.UseRouting();
 
-app.UseRouting();
+    app.UseAuthentication(); // 1. Khám xét người dùng (Đọc thẻ Cookie xem là ai)
+    app.UseAuthorization();  // 2. Kiểm tra quyền hạn (Có được phép vào trang này không)
 
-app.UseAuthentication(); // 1. Khám xét người dùng (Đọc thẻ Cookie xem là ai)
-app.UseAuthorization();  // 2. Kiểm tra quyền hạn (Có được phép vào trang này không)
+    // 1. ƯU TIÊN CAO NHẤT: Route dành cho Areas (Admin, Teacher)
+    // Phải đặt lên đầu để hệ thống check xem "Có phải đang vào Admin không?" trước
+    app.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
 
-// 1. ƯU TIÊN CAO NHẤT: Route dành cho Areas (Admin, Teacher)
-// Phải đặt lên đầu để hệ thống check xem "Có phải đang vào Admin không?" trước
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+    // 2. ƯU TIÊN THẤP HƠN: Route mặc định (Sinh viên/Trang chủ)
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// 2. ƯU TIÊN THẤP HƠN: Route mặc định (Sinh viên/Trang chủ)
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();
+    app.Run();
