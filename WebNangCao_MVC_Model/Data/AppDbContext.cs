@@ -16,10 +16,30 @@ namespace WebNangCao_MVC_Model.Data
         public DbSet<ExamResult> ExamResults { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<UserGroup> UserGroups { get; set; }
+        public DbSet<ExamResultDetail> ExamResultDetails { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
+
+            // Set khóa chính kép cho bảng UserGroup
+            // bảng UserGroup giúp liên kết nhiều-nhiều giữa User và Group, nên cần khóa chính kép để đảm bảo tính duy nhất của mỗi cặp UserId-GroupId
+            modelBuilder.Entity<UserGroup>()
+                .HasKey(ug => new { ug.UserId, ug.GroupId });
+
+            // Cấu hình liên kết: 1 User có nhiều UserGroup
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.UserGroups)
+                .HasForeignKey(ug => ug.UserId);
+
+            // Cấu hình liên kết: 1 Group có nhiều UserGroup
+            modelBuilder.Entity<UserGroup>()
+                .HasOne(ug => ug.Group)
+                .WithMany(g => g.UserGroups)
+                .HasForeignKey(ug => ug.GroupId);
 
 
             //// CÁCH 1: Kích hoạt thủ công từng file trong thư mục FluentAPI (Dùng cách này để dễ kiểm soát)

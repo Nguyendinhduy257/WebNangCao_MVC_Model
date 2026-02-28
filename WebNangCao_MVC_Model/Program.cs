@@ -43,15 +43,18 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
-        var context = services.GetRequiredService<AppDbContext>();
+        //lấy AppDBContextra để xài
+        var context = services.GetRequiredService<WebNangCao_MVC_Model.Data.AppDbContext>();
+        //Ép EF Core tự động tạo Database nếu chưa có (và tạo luôn bảng theo DbSet)
+        context.Database.Migrate(); // Tự động áp dụng các migration (tạo DB nếu chưa có)
         //gọi hàm Seed có trong NapDuLieuDB.cs để nạp dữ liệu vào DB
-        NapDuLieuVaoDB.Seed(context);
+        WebNangCao_MVC_Model.Data.NapDuLieuVaoDB.Seed(context);
     }
     catch (Exception ex)
     {
         // Log lỗi nếu có
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Lỗi khi nạp dữ liệu vào DB.");
+        // THÊM DÒNG NÀY ĐỂ ÉP WEB CRASH VÀ SHOW LỖI LÊN TRÌNH DUYỆT:
+        throw new Exception("LỖI NẠP DỮ LIỆU SEED: " + ex.Message, ex);
     }
 }
     // Configure the HTTP request pipeline.

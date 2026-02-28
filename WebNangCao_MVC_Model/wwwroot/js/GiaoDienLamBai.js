@@ -133,6 +133,7 @@ function initFlagLogic() {
 // ==========================================
 // 5. LOGIC ĐIỀU HƯỚNG CÂU HỎI (NAVIGATION)
 // ==========================================
+//chỉ hiển thị 1 câu hỏi cùng 1 lúc, chỉ chuyển câu hỏi khác khi ấn "Next"
 
 let currentQuestionIndex = 1;
 
@@ -262,11 +263,15 @@ function submitExam(isAutoSubmit = false) {
 function closeSubmitModal() {
     document.getElementById('submitModal').style.display = 'none';
 }
+// ==========================================
+// BIẾN LƯU TRỮ ID KẾT QUẢ
+// ==========================================
+let currentResultId = 0;
 
-let targetRedirectUrl = '/'; // Biến lưu URL chuyển hướng sau khi đóng modal kết quả
-
+// ==========================================
+// HÀM NỘP BÀI LÊN SERVER (AJAX)
+// ==========================================
 async function executeSubmit() {
-    // 1. Ẩn modal xác nhận và làm mờ nút Nộp bài ngoài màn hình chính
     closeSubmitModal();
     const mainSubmitBtn = document.querySelector('.btn-submit');
     if (mainSubmitBtn) {
@@ -293,23 +298,20 @@ async function executeSubmit() {
         const result = await response.json();
 
         if (result.success) {
-            // 2. Gán dữ liệu trả về vào Modal Kết quả
+            // 1. Gán dữ liệu hiển thị lên Modal Kết quả
             document.getElementById('result-score').textContent = result.score;
             document.getElementById('result-correct').textContent = `${result.correctCount} / ${result.totalQuestions}`;
-
-            // THÊM MỚI: Gán dữ liệu thống kê độ khó
-            // ĐỔ DỮ LIỆU THỐNG KÊ ĐỘ KHÓ VÀO MODAL
             document.getElementById('result-easy').textContent = `${result.correctEasy} câu`;
             document.getElementById('result-medium').textContent = `${result.correctMedium} câu`;
             document.getElementById('result-hard').textContent = `${result.correctHard} câu`;
-            // Nếu bạn có URL kết quả cụ thể (ví dụ /TestAttempt/Result/ID), thì cập nhật vào biến
-            if (result.attemptId) {
-                targetRedirectUrl = '/TestAttempt/Result/' + result.attemptId;
-            }
+
+            // 2. GÁN ID KẾT QUẢ VÀO BIẾN TOÀN CỤC (Cực kỳ quan trọng)
+            // Lưu ý: Kiểm tra xem C# của bạn trả về tên biến là attemptId hay resultId để ghi cho đúng
+            currentResultId = result.attemptId || result.resultId || result.AttemptId || result.ResultId || result.id || result.Id || 0;
 
             // 3. Hiển thị Modal Kết quả
             document.getElementById('resultModal').style.display = 'flex';
-            lucide.createIcons(); // Load lại icon trong modal mới
+            lucide.createIcons();
 
         } else {
             alert("Có lỗi xảy ra: " + result.message);
@@ -322,9 +324,18 @@ async function executeSubmit() {
     }
 }
 
-// Hàm kích hoạt khi người dùng bấm nút "Xem chi tiết" trên Modal kết quả
+// ==========================================
+// HÀM XỬ LÝ KHI BẤM NÚT "XEM CHI TIẾT"
+// ==========================================
 function goToResultPage() {
-    window.location.href = targetRedirectUrl;
+    if (currentResultId > 0) {
+        // Có ID -> Chuyển hướng sang trang xem chi tiết
+        window.location.href = '/TestAttempt/ReviewResult?resultId=' + currentResultId;
+    } else {
+        // Lỗi không có ID -> Bắt buộc quay về Dashboard
+        alert("Không tìm thấy dữ liệu bài thi. Đang quay về Dashboard!");
+        window.location.href = '/Student/Dashboard';
+    }
 }
 // Hàm phụ để reset lại nút nộp bài khi gặp lỗi mạng
 function resetSubmitBtn(btn) {
@@ -332,9 +343,24 @@ function resetSubmitBtn(btn) {
     btn.innerHTML = '<i data-lucide="send" width="16" height="16"></i><span>Nộp bài</span>';
     lucide.createIcons();
 }
+// ==========================================
+// 7. ẩn hiện Active khi ấn nút vào bộ lọc Tất cả/ Đã làm/ Đánh dấu
+// ==========================================
+
+const tabs = document.querySelectorAll(".filter-tab");
+tabs.forEach(tab => {
+    tab.addEventListener("click", function () {
+        //xoa class= "active"" o tat ca button thuộc class="filter-tab"
+        tabs.forEach(t => t.classList.remove("active"));
+        //them class="active" o tat ca cac button thuoc class="filter-tab"
+        this.classList.add("active");
+    });
+});
+
+
 
 // ==========================================
-// 7. KHỞI CHẠY KHI TRANG VỪA LOAD XONG
+// XXX. KHỞI CHẠY KHI TRANG VỪA LOAD XONG
 // ==========================================
 window.onload = function () {
     startTimer();

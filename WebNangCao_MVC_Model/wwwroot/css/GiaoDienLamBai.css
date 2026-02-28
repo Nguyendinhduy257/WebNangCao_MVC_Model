@@ -350,11 +350,11 @@ ul {
     border-radius: 6px;
 }
 
-    .filter-tab.active {
-        background-color: white;
-        color: var(--text-main);
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
+.filter-tab.active {
+    background-color: white;
+    color: var(--text-main);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
 
 /* Grid hiển thị số câu hỏi */
 .question-grid {
@@ -386,11 +386,13 @@ ul {
         border-color: var(--primary-color);
         border-width: 2px;
         box-shadow: 0 0 0 3px var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
     }
 
     /* Câu đã trả lời (Answered) */
     .grid-item.answered {
         background-color: var(--primary-color); /* Đổi xanh dương cho đồng bộ với UX thông thường */
+
         border-color: var(--primary-color);
         color: white;
     }
@@ -449,9 +451,11 @@ ul {
     .btn-flag.active-flag svg {
         fill: var(--warning-color);
     }
-
+ /*tô màu đặc trưng khi flagged được thêm vào*/
 .grid-item.flagged {
     position: relative;
+    border:2px solid orange;
+    transition: all 0.2s ease-in-out;
 }
 
 .grid-item.flagged::after {

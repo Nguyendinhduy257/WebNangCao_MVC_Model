@@ -2,6 +2,7 @@
     Layout = null;
     //Truy cập ...localhost:XXXX/Student/Dashboard
 }
+@model WebNangCao_MVC_Model.ViewModels.StudentDashboardViewModel
 <!DOCTYPE html>
     <html>
     <head>
@@ -126,43 +127,67 @@
                     <button class="tab-btn">Đã hoàn thành (1)</button>
                 </div>
 
-                <div class="exam-grid">
-                    <div class="exam-card">
-                        <div class="card-header">
-                            <h3>Kiểm tra Toán học Học kỳ 1</h3>
-                            <span class="badge badge-success">Có thể làm</span>
-                        </div>
-                        <div class="card-tags">
-                            <span class="tag tag-blue">Toán học</span>
-                            <span class="tag tag-orange">Trung bình</span>
-                        </div>
-                        <div class="card-details">
-                            <div class="detail-item"><i data-lucide="calendar"></i> 15/02/2026</div>
-                            <div class="detail-item"><i data-lucide="clock"></i> 60 phút</div>
-                            <div class="detail-item"><i data-lucide="file-text"></i> 40 câu hỏi</div>
-                            <div class="detail-item"><i data-lucide="users"></i> Lớp 12A1</div>
-                        </div>
-                    <button class="btn-primary-action"><i data-lucide="play-circle"></i><a asp-controller="TestAttempt" asp-action="GiaoDienLamBai">Bắt đầu làm bài</a></></button>
-                    </div>
+            <div class="exam-grid">
+                @if (Model.Exams != null && Model.Exams.Count > 0)
+                {
+                    @foreach (var exam in Model.Exams)
+                    {
+                        <div class="exam-card">
+                            <div class="card-header">
+                                <h3>@exam.Title</h3>
+                                @if (exam.Status == "Có thể làm")
+                                {
+                                    <span class="badge badge-success">Có thể làm</span>
+                                }
+                                else if (exam.Status == "Sắp tới")
+                                {
+                                    <span class="badge badge-blue">Sắp tới</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-gray">Đã hoàn thành</span>
+                                }
+                            </div>
+                            <div class="card-tags">
+                                <span class="tag tag-blue">@exam.SubjectName</span>
+                                <span class="tag tag-orange">@exam.Difficulty</span>
+                            </div>
+                            <div class="card-details">
+                                <div class="detail-item"><i data-lucide="calendar"></i> @exam.StartTime.ToString("dd/MM/yyyy HH:mm")</div>
+                                <div class="detail-item"><i data-lucide="clock"></i> @exam.Duration phút</div>
+                                <div class="detail-item"><i data-lucide="file-text"></i> @exam.TotalQuestions câu hỏi</div>
+                                <div class="detail-item"><i data-lucide="users"></i> @exam.GroupName (Mã lớp: @exam.IdGroup)</div>
+                            </div>
 
-                    <div class="exam-card">
-                        <div class="card-header">
-                            <h3>Bài thi Tiếng Anh giữa kỳ</h3>
-                            <span class="badge badge-blue">Sắp tới</span>
+                            @if (exam.Status == "Có thể làm")
+                            {
+                                <a asp-controller="TestAttempt"
+                                   asp-action="GiaoDienLamBai"
+                                   asp-route-id="@exam.Id"
+                                   class="btn-primary-action" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <i data-lucide="play-circle"></i> Bắt đầu làm bài
+                                </a>
+                            }
+                            else if (exam.Status == "Sắp tới")
+                            {
+                                <button class="btn-disabled" disabled><i data-lucide="history"></i> Chưa tới giờ thi</button>
+                            }
+                            else
+                            {
+                                <button class="btn-disabled" disabled style="background-color: #e2e8f0; color: #475569;"><i data-lucide="check-circle"></i> Đã hoàn thành</button>
+                            }
                         </div>
-                        <div class="card-tags">
-                            <span class="tag tag-blue">Tiếng Anh</span>
-                            <span class="tag tag-green">Dễ</span>
-                        </div>
-                        <div class="card-details">
-                            <div class="detail-item"><i data-lucide="calendar"></i> 18/02/2026</div>
-                            <div class="detail-item"><i data-lucide="clock"></i> 90 phút</div>
-                            <div class="detail-item"><i data-lucide="file-text"></i> 50 câu hỏi</div>
-                            <div class="detail-item"><i data-lucide="users"></i> Lớp 11B2</div>
-                        </div>
-                        <button class="btn-disabled" disabled><i data-lucide="history"></i> Chưa tới giờ thi</button>
+                    }
+                }
+                else
+                {
+                    <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b;">
+                        <i data-lucide="inbox" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                        <h3>Không có bài thi nào</h3>
+                        <p>Bạn chưa có bài thi nào từ các lớp đã tham gia.</p>
                     </div>
-                </div>
+                }
+            </div>
             </section>
         </main>
         <script src="~/js/student-dashboard.js"></script>

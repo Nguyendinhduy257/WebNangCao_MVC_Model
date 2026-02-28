@@ -174,6 +174,26 @@ namespace WebNangCao_MVC_Model.Controllers
             // Lưu xuống Database
             _context.Users.Add(newUser);
             _context.SaveChanges();
+            //tự động gắn sinh viên vào lớp học đầu tiên dưới dạng mặc định
+            if (newUser.Role == "student")
+            {
+                // Tìm lớp học đầu tiên (Lớp Tiếng Anh IT K12 do Seed data tạo)
+                var defaultGroup = _context.Groups.FirstOrDefault();
+
+                if (defaultGroup != null)
+                {
+                    var userGroup = new UserGroup
+                    {
+                        UserId = newUser.Id, // EF Core đã tự sinh ID cho newUser ở hàm SaveChangesAsync phía trên
+                        GroupId = defaultGroup.Id,
+                        JoinedAt = DateTime.UtcNow
+                    };
+
+                    _context.UserGroups.Add(userGroup);
+                    await _context.SaveChangesAsync(); // Lưu bảng trung gian vào DB
+                }
+            }
+
             //tạo thẻ căn cước (Claims lưu vào COOKIE) sau khi đăng ký xong
             var claims = new List<Claim>
             {

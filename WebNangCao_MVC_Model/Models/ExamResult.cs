@@ -9,7 +9,11 @@
 
         public int ExamId { get; set; }
         public double Score { get; set; } // Điểm số
+        public DateTime SubmitTime { get; set; }
 
+        public User Student { get; set; }
+        public Exam Exam { get; set; }
+        public virtual ICollection<ExamResultDetail> ExamResultDetails { get; set; } = new List<ExamResultDetail>();
         // ... các thuộc tính khác
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using WebNangCao_MVC_Model.Data;
 using WebNangCao_MVC_Model.Models;
+using WebNangCao_MVC_Model.ViewModels;
 
 public class TestAttemptController : Controller
 {
@@ -96,6 +98,35 @@ public class TestAttemptController : Controller
         //công thức (đúng/tổng câu) * 10
         //làm tròn 2 chữ số
         double score = totalQuestions > 0 ? Math.Round((double)correctCount / totalQuestions * 10, 2) : 0.0;
+        //Lưu kết quả vào DB
+        // 1. Lấy ID của sinh viên đang nộp bài (từ Cookie đăng nhập)
+        var userIdString = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+        int studentId = string.IsNullOrEmpty(userIdString) ? 0 : int.Parse(userIdString);
+
+        // 2. Khởi tạo đối tượng cha
+        var examResult = new ExamResult
+        {
+            StudentId = studentId,
+            ExamId = model.ExamId,
+            Score = score,
+            SubmitTime = DateTime.UtcNow,
+            ExamResultDetails = new List<ExamResultDetail>() // Khởi tạo list
+        };
+
+        // 3. Duyệt vòng lặp và add vào list của examResult
+        foreach (var userAns in model.UserAnswers)
+        {
+            examResult.ExamResultDetails.Add(new ExamResultDetail
+            {
+                QuestionId = userAns.QuestionId,
+                SelectedAnswerId = userAns.SelectedAnswerId
+                // EF sẽ tự động điền ID sau khi lưu
+            });
+        }
+
+        // 4. Chỉ cần Add thằng cha và Save một lần duy nhất
+        _context.ExamResults.Add(examResult);
+        await _context.SaveChangesAsync(); // QUAN TRỌNG: Lệnh này chạy xong thì PostgreSQL mới sinh ra ID thật cho examResult!
         //trả về trang JSON với thông tin điểm số, số câu đúng, tổng câu và thông điệp chúc mừng
         return Json(new
         {
@@ -107,7 +138,51 @@ public class TestAttemptController : Controller
             correctEasy = correctEasy,
             correctMedium = correctMedium,
             correctHard = correctHard,
+            //lấy ID thật từ DB sau khi SaveChange
+            resultId = examResult.Id,
             message = "Chúc mừng bạn đã hoàn thành bài thi!"
         });
+    }
+    // HÀM XỬ LÝ TRANG XEM LẠI CHI TIẾT
+    [HttpGet]
+    public async Task<IActionResult> ReviewResult(int resultId)
+    {
+        // 1. Lấy kết quả tổng quát
+        var result = await _context.ExamResults.FindAsync(resultId);
+        if (result == null) return NotFound("Không tìm thấy kết quả!");
+
+        // 2. Lấy chi tiết các câu đã làm (Để biết user đã chọn đáp án nào)
+        var userDetails = await _context.ExamResultDetails
+            .Where(d => d.ExamResultId == resultId)
+            .ToDictionaryAsync(d => d.QuestionId, d => d.SelectedAnswerId);
+
+        // 3. Lấy danh sách câu hỏi và đáp án của đề thi
+        var questions = await _context.Questions
+            .Include(q => q.Answers)
+            .Where(q => q.ExamId == result.ExamId)
+            .ToListAsync();
+
+        // 4. Đổ dữ liệu vào ViewModel
+        var viewModel = new ReviewResultViewModel
+        {
+            ResultId = result.Id,
+            Score = result.Score,
+            Questions = questions.Select(q => new ReviewQuestionViewModel
+            {
+                QuestionId = q.Id,
+                Content = q.Content,
+                // Lấy ID đáp án đã chọn từ Dictionary userDetails (nếu không chọn thì trả về 0)
+                SelectedAnswerId = userDetails.ContainsKey(q.Id) ? userDetails[q.Id] : 0,
+
+                Answers = q.Answers.Select(a => new ReviewAnswerViewModel
+                {
+                    AnswerId = a.Id,
+                    Content = a.Content,
+                    IsCorrectAnswer = a.IsCorrect
+                }).ToList()
+            }).ToList()
+        };
+
+        return View(viewModel);
     }
 }
