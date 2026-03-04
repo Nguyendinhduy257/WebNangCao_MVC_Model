@@ -5,7 +5,7 @@
 namespace WebNangCao_MVC_Model.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class DataExam_Question_Answer2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

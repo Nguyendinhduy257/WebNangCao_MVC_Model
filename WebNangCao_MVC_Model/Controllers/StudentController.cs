@@ -1,93 +1,182 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore; // Bắt buộc phải có để dùng Include() và ToListAsync()
 using WebNangCao_MVC_Model.Data;
 using WebNangCao_MVC_Model.Models;
 using WebNangCao_MVC_Model.ViewModels;
-// Nhớ using thư viện chứa Models của bạn (Ví dụ: Exam, ExamResult...)
+using System.Security.Claims;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
 namespace WebNangCao_MVC_Model.Controllers
 {
-    // Tên class bắt buộc phải có chữ "Controller" ở cuối
-    //[Authorize] //yêu cầu người dùng phải đăng nhập mới được truy cập vào các Action trong controller này
+    [Authorize]
     public class StudentController : Controller
     {
         private readonly AppDbContext _context;
+
         public StudentController(AppDbContext context)
         {
             _context = context;
         }
-        // Tên hàm (Action) phải TRÙNG với tên file View (Dashboard)
-        public IActionResult Dashboard()
+
+        // Đổi thành async Task<IActionResult> để truy vấn Database mượt hơn
+        public async Task<IActionResult> Dashboard()
         {
-            //lấy ID current user đang đăng nhập
-            /*
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
-            if(string.IsNullOrEmpty(userId))
+            // ==========================================
+            // 1. LẤY ID CỦA SINH VIÊN ĐANG ĐĂNG NHẬP
+            // ==========================================
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
             {
-                return RedirectToAction("Login", "Account"); // Nếu không lấy được UserId, chuyển hướng về trang đăng nhập
+                return RedirectToAction("Index", "Account");
             }
-            int studentId = int.Parse(userId); // Chuyển UserId từ string sang int 
-            */
+            int studentId = int.Parse(userIdString);
 
+            // ==========================================
+            // 2. TÌM CÁC LỚP (GROUP) MÀ SINH VIÊN ĐANG THAM GIA
+            // ==========================================
+            // (Lấy ID các lớp mà sinh viên đang học thật trong Database):
+            var studentGroupIds = await _context.UserGroups
+                .Where(ug => ug.UserId == studentId)
+                .Select(ug => ug.GroupId)
+                .ToListAsync();
 
-            //Gán cứng ID của 1 sinh viên có sẵn trong Database để test
-            int studentId = 1;
+            // ==========================================
+            // 3. LẤY BÀI THI & KẾT QUẢ TỪ DATABASE
+            // ==========================================
+            // Chỉ lấy các bài thi đang Active và thuộc về Group của sinh viên này
+            var rawExams = await _context.Exams
+                .Include(e => e.Questions) // Include để đếm tổng số câu hỏi
+                .Where(e => e.IsActive && studentGroupIds.Contains(e.IdGroup))
+                .ToListAsync();
 
+            // Lấy kết quả thi của sinh viên này để biết bài nào đã làm rồi
+            var userResults = await _context.ExamResults
+                .Where(r => r.StudentId == studentId)
+                .ToListAsync();
+            var completedExamIds = userResults.Select(r => r.ExamId).ToList();
 
-            //truy vấn database để lấy thông tin dashboard của sinh viên
-            var model=new StudentDashboardViewModel();
-            // Gán từng thuộc tính
-            model.TotalExams = _context.Exams.Count(e => e.IsActive);
-            model.CompletedExams = _context.ExamResults.Count(r => r.StudentId == studentId);
+            // ==========================================
+            // 4. MAP DỮ LIỆU SANG VIEW MODEL VÀ TÍNH TRẠNG THÁI
+            // ==========================================
+            var examListVM = new List<ExamItemViewModel>();
 
-            // Lấy danh sách kết quả trước để tính điểm trung bình
-            var results = _context.ExamResults.Where(r => r.StudentId == studentId);
-            model.AverageScore = results.Any() ? Math.Round(results.Average(r => r.Score), 1) : 0;
+            // BẮT BUỘC: Dùng UtcNow để đồng bộ với thời gian PostgreSQL đang lưu
+            var currentTime = DateTime.UtcNow;
 
-            model.UpcomingExams = _context.Exams.Count(e => e.StartTime > DateTime.UtcNow);
-            // Lệnh View() này sẽ tự động đi tìm file: Views/Student/Dashboard.cshtml
+            foreach (var exam in rawExams)
+            {
+                string status = "";
+
+                // Logic phân loại trạng thái bài thi MỚI NHẤT
+                if (completedExamIds.Contains(exam.Id))
+                {
+                    status = "Đã hoàn thành"; // Đã có điểm trong DB
+                }
+                else if (currentTime < exam.StartTime)
+                {
+                    status = "Sắp tới"; // Chưa tới giờ mở đề
+                }
+                // SỬ DỤNG exam.EndTime THAY VÌ CỘNG DURATION
+                else if (currentTime >= exam.StartTime && currentTime <= exam.EndTime)
+                {
+                    status = "Có thể làm"; // Đang trong khung giờ cho phép thi
+                }
+                else
+                {
+                    status = "Đã hoàn thành"; // Đã qua hạn chót (EndTime)
+                }
+
+                examListVM.Add(new ExamItemViewModel
+                {
+                    Id = exam.Id,
+                    Title = exam.Title,
+                    StartTime = exam.StartTime,
+                    Duration = exam.Duration,
+                    TotalQuestions = exam.Questions?.Count ?? 0,
+                    Status = status,
+                    IdGroup = exam.IdGroup,
+                    SubjectName = "Môn học " + exam.IdGroup, // Giả lập tên môn
+                    Difficulty = "Trung bình" // Giả lập độ khó
+                });
+            }
+
+            // ==========================================
+            // 5. TỔNG HỢP VÀ GỬI RA VIEW
+            // ==========================================
+            var model = new StudentDashboardViewModel
+            {
+                TotalExams = rawExams.Count,
+                CompletedExams = userResults.Count,
+                UpcomingExams = examListVM.Count(e => e.Status == "Sắp tới"),
+                AverageScore = userResults.Any() ? Math.Round(userResults.Average(r => r.Score), 1) : 0,
+                Exams = examListVM.OrderBy(e => e.StartTime).ToList() // Sắp xếp bài thi theo thời gian
+            };
+
             return View(model);
         }
-        // Hàm này chỉ dùng để tạo dữ liệu mẫu chạy thử
+        // ==========================================
+        // HÀM BƠM DỮ LIỆU MẪU ĐÃ ĐƯỢC CẬP NHẬT CHUẨN XÁC
+        // ==========================================
         public IActionResult SeedData()
         {
-            // 1. Tạo dữ liệu cho bảng Exams (Bài thi)
-            // Nếu bảng chưa có bài thi nào thì mới thêm vào để tránh bị trùng lặp khi F5 nhiều lần
             if (!_context.Exams.Any())
             {
+                var now = DateTime.UtcNow; // BẮT BUỘC DÙNG UTC
+
                 _context.Exams.AddRange(
-                    // Bài 1: Đã diễn ra trong quá khứ (cách đây 10 ngày)
-                    new Exam { Title = "Toán học Học kỳ 1", IsActive = true, StartTime = DateTime.UtcNow.AddDays(-10) },
+                    // Đang diễn ra (Có thể làm) - Thuộc Lớp 1
+                    new Exam
+                    {
+                        Title = "Kiểm tra Toán học Học kỳ 1",
+                        IsActive = true,
+                        StartTime = now.AddMinutes(-10),
+                        EndTime = now.AddDays(1), // THÊM ENDTIME VÀO ĐÂY
+                        Duration = 60,
+                        IdGroup = 1
+                    },
 
-                    // Bài 2: Sắp tới (cách hiện tại 5 ngày)
-                    new Exam { Title = "Tiếng Anh giữa kỳ", IsActive = true, StartTime = DateTime.UtcNow.AddDays(5) },
+                    // Sắp tới - Thuộc Lớp 2
+                    new Exam
+                    {
+                        Title = "Tiếng Anh giữa kỳ",
+                        IsActive = true,
+                        StartTime = now.AddDays(2),
+                        EndTime = now.AddDays(3), // THÊM ENDTIME VÀO ĐÂY
+                        Duration = 90,
+                        IdGroup = 2
+                    },
 
-                    // Bài 3: Sắp tới (cách hiện tại 2 ngày)
-                    new Exam { Title = "Vật lý 15 phút", IsActive = true, StartTime = DateTime.UtcNow.AddDays(2) },
-
-                    // Bài 4: Bài thi đã đóng (IsActive = false)
-                    new Exam { Title = "Hóa học thử nghiệm", IsActive = false, StartTime = DateTime.UtcNow.AddDays(-20) }
+                    // Đã làm xong (Quá hạn) - Thuộc Lớp 1
+                    new Exam
+                    {
+                        Title = "Vật lý 15 phút",
+                        IsActive = true,
+                        StartTime = now.AddDays(-5),
+                        EndTime = now.AddDays(-4), // THÊM ENDTIME VÀO ĐÂY
+                        Duration = 15,
+                        IdGroup = 1
+                    }
                 );
-                _context.SaveChanges(); // Lưu xuống DB để EF Core tự tạo ID
+                _context.SaveChanges();
             }
 
-            // 2. Tạo dữ liệu cho bảng ExamResults (Kết quả thi)
             if (!_context.ExamResults.Any())
             {
-                // Lấy bài thi đầu tiên trong Database ra
-                var firstExam = _context.Exams.FirstOrDefault();
-
-                if (firstExam != null)
+                var pastExam = _context.Exams.FirstOrDefault(e => e.Title.Contains("Vật lý"));
+                if (pastExam != null)
                 {
                     _context.ExamResults.Add(
-                        // Giả lập: Sinh viên ID = 1 đã thi bài này và được 8.5 điểm
-                        new ExamResult { StudentId = 1, ExamId = firstExam.Id, Score = 8.5 }
+                        new ExamResult { StudentId = 1, ExamId = pastExam.Id, Score = 8.5 }
                     );
                     _context.SaveChanges();
                 }
             }
 
-            return Content("🎉 Đã bơm dữ liệu mẫu vào PostgreSQL thành công! Bạn hãy sửa URL quay lại /Student/Dashboard để xem kết quả nhé.");
+            return Content("Đã bơm dữ liệu mẫu THÀNH CÔNG! Hãy truy cập lại /Student/Dashboard để xem các thẻ bài thi xịn xò nhé.");
         }
     }
 }

@@ -20,5 +20,10 @@ namespace WebNangCao_MVC_Model.Models
 
         // Thêm trường này để quản lý thời gian tạo
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        //thêm bảng UserGroups là bảng trung gian để quản lý mối quan hệ nhiều-nhiều giữa User và Group
+        // Một User có thể thuộc nhiều Group thông qua bảng trung gian UserGroup
+        // ICollection<UserGroup> để EF Core có thể tự động quản lý mối quan hệ nhiều-nhiều
+        public ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
     }
 }
