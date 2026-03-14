@@ -2,8 +2,27 @@
 @{
     ViewData["Title"] = "Quản Trị Viên";
 }
+<style>
+    /* Định nghĩa kịch bản chuyển động (Keyframes) */
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px); /* Bắt đầu từ bên dưới 20px */
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0); /* Trượt về đúng vị trí gốc */
+        }
+    }
 
-<div class="flex flex-col h-screen bg-gray-50">
+    /* Tạo cái áo (Class) để khoác lên HTML */
+    .animate-fade-in-up {
+        /* Thời gian chạy là 0.5s (Chỉnh số này để nhanh/chậm) */
+        animation: fadeInUp 0.7s ease-out forwards; 
+    }
+</style>
+
+<div class="flex flex-col h-screen bg-gray-50 animate-fade-in-up">
 
     <div class="flex justify-between items-center w-full px-8 py-4 bg-white border-b border-gray-200">
         <a asp-controller="Account" asp-action="Index" asp class="flex items-center gap-2 text-gray-600 hover:text-black transition-colors">
