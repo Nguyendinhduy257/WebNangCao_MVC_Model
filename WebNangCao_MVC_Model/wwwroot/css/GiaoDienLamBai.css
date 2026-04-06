@@ -865,7 +865,7 @@ ul {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transform:translateY(1px) /*chỉnh độ lệch cao của icon*/
+    transform: translateY(1px); /*chỉnh độ lệch cao của icon*/
 }
 /* Đẩy nhẹ trang web lên một chút để không bị Footer che mất nội dung */
 body {
