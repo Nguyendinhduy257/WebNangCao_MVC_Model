@@ -1,0 +1,106 @@
+﻿@model WebNangCao_MVC_Model.Models.Exam
+
+@{
+    ViewData["Title"] = "Kho Câu Hỏi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/classifyExam.css" rel="stylesheet" />
+
+<div class="lib-page-wrapper">
+    <div class="lib-main-container">
+        <div class="lib-panel">
+
+            <div class="lib-header">
+                <div>
+                    <h2 class="fw-bold">📦 Kho Câu Hỏi: @Model.Title</h2>
+                    <p class="text-muted" style="font-size: 0.9rem; margin: 5px 0 0 0;">
+                        ID: <b>#@Model.Id</b> | Tổng cộng: <b>@(Model.Questions?.Count ?? 0)</b> câu
+                    </p>
+                </div>
+
+                <div class="action-group">
+                    <button id="btn-delete-multiple" class="btn-lib btn-danger" style="display: none;">
+                        <i data-lucide="trash-2"></i> Xóa (<span id="selected-count">0</span>)
+                    </button>
+
+                    <input type="file" id="excel-upload" style="display: none;" />
+                    <label for="excel-upload" class="btn-lib btn-secondary cursor-pointer">
+                        <i data-lucide="file-spreadsheet" style="color: #10b981;"></i> Nhập Excel
+                    </label>
+
+                    <a href="/Student/PhanLoaiCauHoi?examId=@Model.Id" class="btn-lib btn-primary">
+                        <i data-lucide="wand-2"></i> Vào bàn phân loại
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="lib-table border-table">
+                    <thead>
+                        <tr>
+                            <th width="40"><input type="checkbox" id="check-all" class="lib-checkbox"></th>
+                            <th width="50" class="text-center">STT</th>
+                            <th>Nội dung câu hỏi & Đáp án</th>
+                            <th width="150">Phân loại</th>
+                            <th width="120" class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Questions != null && Model.Questions.Any())
+                        {
+                            int stt = 1;
+                            foreach (var q in Model.Questions)
+                            {
+                                <tr data-id="@q.Id">
+                                    <td><input type="checkbox" class="lib-checkbox question-check" value="@q.Id"></td>
+                                    <td class="text-center text-muted fw-bold">@(stt++)</td>
+                                    <td>
+                                        <div class="fw-bold text-dark mb-2">@q.Content</div>
+                                        <ul class="answer-list">
+                                            @foreach (var ans in q.Answers ?? new List<WebNangCao_MVC_Model.Models.Answer>())
+                                            {
+                                                <li class="answer-item @(ans.IsCorrect ? "ans-correct" : "ans-wrong")">
+                                                    <i data-lucide="@(ans.IsCorrect ? "check-circle-2" : "circle")"></i>
+                                                    <span>@ans.Content</span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(q.Difficulty) || q.Difficulty == "Chưa phân loại")
+                                        {
+                                            <span class="lib-badge badge-waiting">Chưa có</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="lib-badge badge-success">@q.Difficulty</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <a href="/Student/Edit/@q.Id" class="action-icon action-edit" title="Sửa">
+                                                <i data-lucide="edit-3"></i>
+                                            </a>
+                                            <button class="action-icon action-delete single-delete" data-id="@q.Id" title="Xóa">
+                                                <i data-lucide="trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script src="~/js/library-upload.js"></script>
+}

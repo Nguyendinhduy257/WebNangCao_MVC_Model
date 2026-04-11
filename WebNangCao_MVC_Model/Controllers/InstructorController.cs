@@ -47,10 +47,10 @@ namespace WebNangCao_MVC_Model.Controllers
                 .CountAsync();
 
             var exams = await _context.Exams
-                .Where(e => instructorGroups.Contains(e.IdGroup))
+                // Thêm điều kiện khác null và lấy .Value
+                .Where(e => e.IdGroup.HasValue && instructorGroups.Contains(e.IdGroup.Value))
                 .Include(e => e.Questions)
                 .ToListAsync();
-
             var totalExams = exams.Count;
             var completedExams = exams.Count(e => e.EndTime < DateTime.UtcNow);
             var pendingExams = exams.Count(e => e.StartTime <= DateTime.UtcNow && e.EndTime > DateTime.UtcNow);
@@ -298,7 +298,7 @@ namespace WebNangCao_MVC_Model.Controllers
                 .ToListAsync();
 
             var exams = await _context.Exams
-                .Where(e => instructorGroups.Contains(e.IdGroup))
+                .Where(e => e.IdGroup.HasValue && instructorGroups.Contains(e.IdGroup.Value))
                 .Include(e => e.Questions)
                 .ToListAsync();
 
@@ -314,7 +314,7 @@ namespace WebNangCao_MVC_Model.Controllers
                 Id = e.Id,
                 Title = e.Title,
                 GroupName = _context.Groups.FirstOrDefault(g => g.Id == e.IdGroup)?.GroupName ?? "",
-                IdGroup = e.IdGroup,
+                IdGroup = e.IdGroup.Value,
                 StartTime = e.StartTime,
                 EndTime = e.EndTime,
                 Duration = e.Duration,
@@ -433,13 +433,14 @@ namespace WebNangCao_MVC_Model.Controllers
                 .Select(ug => ug.GroupId)
                 .ToListAsync();
 
-            if (!instructorGroups.Contains(exam.IdGroup))
-                return Forbid();
+            // Nếu IdGroup bị null (đề cá nhân) HOẶC giảng viên không quản lý nhóm này thì chặn lại
+            if (!exam.IdGroup.HasValue || !instructorGroups.Contains(exam.IdGroup.Value))
+                return Forbid(); // Với UpdateExamStatus thì giữ nguyên dòng return Json(...) của bạn
 
             var model = new ExamCreateViewModel
             {
                 Title = exam.Title,
-                IdGroup = exam.IdGroup,
+                IdGroup = exam.IdGroup.Value,
                 StartTime = exam.StartTime,
                 EndTime = exam.EndTime,
                 Duration = exam.Duration,
@@ -525,7 +526,7 @@ namespace WebNangCao_MVC_Model.Controllers
                 .Select(ug => ug.GroupId)
                 .ToListAsync();
 
-            if (!instructorGroups.Contains(exam.IdGroup))
+            if (!exam.IdGroup.HasValue || !instructorGroups.Contains(exam.IdGroup.Value))
                 return Forbid();
 
             var results = await _context.ExamResults
@@ -566,7 +567,7 @@ namespace WebNangCao_MVC_Model.Controllers
                 .Select(ug => ug.GroupId)
                 .ToListAsync();
 
-            if (!instructorGroups.Contains(exam.IdGroup))
+            if (!exam.IdGroup.HasValue || !instructorGroups.Contains(exam.IdGroup.Value))
                 return Json(new { success = false, message = "Unauthorized" });
 
             switch (status)

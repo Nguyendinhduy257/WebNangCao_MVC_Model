@@ -1,0 +1,85 @@
+﻿@model WebNangCao_MVC_Model.Models.Exam
+
+@{
+    ViewData["Title"] = "Bàn Phân Loại";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/css/PhanLoaiCauHoi.css" rel="stylesheet" />
+
+<div class="container-fluid mt-4 mb-5 px-xl-5">
+    <div class="modern-panel mb-4 py-3 px-4 d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="fw-bolder m-0" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                <i class="fas fa-columns me-2 text-primary"></i> Bàn Phân Loại Trực Quan
+            </h3>
+            <span class="text-muted small fw-medium mt-1 d-block">Kéo thả thẻ câu hỏi hoặc dùng AI để tự động phân loại</span>
+        </div>
+        <div class="d-flex gap-3">
+            <button class="btn btn-dark btn-modern shadow-sm d-flex align-items-center gap-2" onclick="runAutoClassification()">
+                <i class="fas fa-robot text-warning"></i> Auto AI
+            </button>
+            <button class="btn btn-success btn-modern shadow-sm d-flex align-items-center gap-2" id="btn-save" onclick="saveClassification()" style="background: var(--gradient-success); border:none;">
+                <i class="fas fa-cloud-upload-alt"></i> Lưu Hệ Thống
+            </button>
+            <a href="/Student/ClassifyExam?examId=@Model.Id" class="btn btn-light btn-modern border text-dark">
+                <i class="fas fa-times me-1"></i> Hủy
+            </a>
+        </div>
+    </div>
+
+    <div class="waiting-zone mb-4 shadow-sm" id="col-waiting" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+        <div class="fw-bold text-secondary mb-3 d-flex justify-content-between align-items-center">
+            <span class="text-dark"><i class="fas fa-inbox me-2 text-primary"></i> Khay chờ xử lý</span>
+            <span class="badge bg-secondary rounded-pill px-3 py-2 badge-count shadow-sm">0</span>
+        </div>
+
+        <div class="d-flex flex-wrap gap-3" id="waiting-container">
+            @if (Model.Questions != null)
+            {
+                int delay = 0;
+                foreach (var q in Model.Questions)
+                {
+                    <div class="question-card" draggable="true" ondragstart="drag(event)"
+                         id="q_@q.Id" data-question-id="@q.Id" data-length="@(q.Content?.Length ?? 0)"
+                         style="animation-delay: @(delay)ms;">
+                        <span class="text-primary fw-bold me-1">#@q.Id:</span> @q.Content
+                    </div>
+                    delay += 150; // Tăng dần thời gian trễ để tạo hiệu ứng thẻ rơi từng cái một
+                }
+            }
+        </div>
+    </div>
+
+    <div class="row g-4 kanban-board">
+        <div class="col-md-4">
+            <div class="kanban-col shadow-sm" id="col-easy" data-difficulty="Dễ" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="col-header">
+                    <span><i class="fas fa-seedling"></i> Mức Dễ</span>
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill badge-count border border-success">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kanban-col shadow-sm" id="col-medium" data-difficulty="Trung bình" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="col-header">
+                    <span><i class="fas fa-balance-scale"></i> Trung Bình</span>
+                    <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill badge-count border border-warning">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="kanban-col shadow-sm" id="col-hard" data-difficulty="Khó" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                <div class="col-header">
+                    <span><i class="fas fa-mountain"></i> Mức Khó</span>
+                    <span class="badge bg-danger bg-opacity-10 text-danger rounded-pill badge-count border border-danger">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/KeoThaPhanLoai.js"></script>
+}

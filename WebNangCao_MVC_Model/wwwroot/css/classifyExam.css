@@ -1,0 +1,529 @@
+﻿/* Khống chế kích thước icon Lucide */
+.btn-lib svg,
+.row-actions svg,
+.answer-item svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.5px; /* Làm icon đậm nét hơn một chút */
+}
+
+.answer-item svg {
+    width: 14px;
+    height: 14px;
+    margin-top: 2px;
+}
+
+.action-icon svg {
+    width: 16px;
+    height: 16px;
+}
+.border-table {
+    border: 3px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+/*1. CẤU TRÚC LAYOUT CĂN GIỮA*/
+.lib-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Để bảng dài cuộn tự nhiên */
+    min-height: 100vh;
+    padding: 50px 20px;
+    background-color: #f0f4f8;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.lib-main-container {
+    width: 100%;
+    max-width: 1100px;
+    flex-shrink: 0; /* Ép container không bị bóp nghẹt */
+}
+
+.lib-panel {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), 0 5px 15px rgba(0, 0, 0, 0.03);
+    border: 1px solid #e1e8f0;
+}
+
+/* ===========================================
+   2. HEADER & TIÊU ĐỀ
+   =========================================== */
+.lib-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 25px;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.lib-title h2 {
+    margin: 8px 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Thao tác nhóm nút (Thay thế d-flex gap-3 của bootstrap) */
+.action-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* ===========================================
+   3. NÚT BẤM & BADGE THUẦN
+   =========================================== */
+.btn-lib {
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+}
+
+.btn-lib-secondary {
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+    .btn-lib-secondary:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+        transform: translateY(-2px);
+    }
+
+.btn-lib-primary {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(67, 97, 238, 0.25);
+}
+
+    .btn-lib-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(67, 97, 238, 0.35);
+    }
+
+/* Badge xử lý trạng thái */
+.lib-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.badge-waiting {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.badge-success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* ===========================================
+   4. BẢNG DỮ LIỆU THUẦN (MODERN TABLE)
+   =========================================== */
+.table-responsive {
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.lib-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 20px 20px; /* Tạo khoảng cách giữa các dòng */
+}
+
+    .lib-table thead th {
+        text-align: left;
+        padding: 10px 20px;
+        color: #94a3b8;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .lib-table tbody tr {
+        background: #ffffff;
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .lib-table tbody tr:hover {
+            transform: scale(1.006); /* Tăng nhẹ tỷ lệ để thấy rõ sự khác biệt */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            background-color: #e2e8f0;
+            border-left-color: #007bff; /* Chỉ đổi màu border */
+            border-right-color: #007bff;
+            transition: all 0.5s ease-in-out;
+        }
+
+    .lib-table td {
+        padding: 25px 20px;
+        border-top: 1px solid #f1f5f9;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+        .lib-table td:first-child {
+            border-left: 1px solid #f1f5f9;
+            border-radius: 12px 0 0 12px;
+            text-align: center;
+        }
+
+        .lib-table td:last-child {
+            border-right: 1px solid #f1f5f9;
+            border-radius: 0 12px 12px 0;
+            text-align: center;
+        }
+
+/* Tiện ích văn bản */
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #64748b;
+}
+
+.fw-bold {
+    font-weight: 700;
+}
+
+.fw-medium {
+    font-weight: 500;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+/* --- LAYOUT CHỐNG BẸP --- */
+.lib-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 40px 20px;
+    background-color: #f8fafc;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.lib-main-container {
+    width: 100%;
+    max-width: 1300px; /* Tăng nhẹ để chứa thêm cột đáp án */
+    flex-shrink: 0;
+}
+
+.lib-panel {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+/* --- HEADER & TOOLBAR --- */
+.lib-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.lib-title h2 {
+    margin: 5px 0;
+    color: #1e293b;
+    font-size: 1.5rem;
+}
+
+.action-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* --- BUTTONS --- */
+.btn-lib {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    transition: 0.2s;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #4361ee;
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-danger {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+    .btn-danger:hover {
+        background: #dc2626;
+        color: #fff;
+    }
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* --- TABLE & ANSWERS --- */
+.lib-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    .lib-table th {
+        text-align: left;
+        padding: 12px 15px;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        border-bottom: 2px solid #edf2f7;
+    }
+
+    .lib-table td {
+        padding: 15px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: top;
+    }
+
+/* List đáp án */
+.answer-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia 2 cột cho gọn */
+    gap: 8px;
+}
+
+.answer-item {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.ans-correct {
+    background: #dcfce7;
+    color: #166534;
+    border-left: 3px solid #22c55e;
+}
+
+.ans-wrong {
+    background: #f1f5f9;
+    color: #64748b;
+    border-left: 3px solid #cbd5e1;
+}
+
+/* Trạng thái câu hỏi */
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.status-unclassified {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.status-done {
+    background: #e0e7ff;
+    color: #4361ee;
+}
+
+/* Action Icons */
+.row-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.action-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: #64748b;
+    transition: 0.2s;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
+}
+
+.action-edit:hover {
+    background: #e0e7ff;
+    color: #4361ee;
+}
+
+.action-delete:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Custom Checkbox */
+.lib-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+.row-selected {
+    background-color: #f0f7ff !important;
+}
+
+    .row-selected td {
+        border-top: 1px solid #bae6fd !important;
+        border-bottom: 1px solid #bae6fd !important;
+    }
+
+/* Fix icon cho list đáp án */
+.answer-item i {
+    font-size: 10px;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+/*responsive màn hình */
+/* --- TABLET (Nhỏ hơn 992px) --- */
+@media (max-width: 991.98px) {
+    .lib-page-wrapper {
+        padding: 30px 15px;
+    }
+
+    .lib-panel {
+        padding: 20px;
+    }
+
+    /* Đưa danh sách đáp án về 1 cột thay vì 2 cột để dễ đọc hơn */
+    .answer-list {
+        grid-template-columns: 1fr;
+    }
+
+    /* Giảm bớt padding của bảng */
+    .lib-table td {
+        padding: 15px 10px;
+    }
+}
+
+/* --- MOBILE (Nhỏ hơn 768px) --- */
+@media (max-width: 767.98px) {
+    .lib-page-wrapper {
+        padding: 15px 10px;
+    }
+
+    .lib-panel {
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    /* Đưa Header xếp dọc thay vì ngang */
+    .lib-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    /* Các nút bấm chiếm toàn bộ chiều ngang */
+    .action-group {
+        width: 100%;
+        flex-wrap: wrap; /* Cho phép rớt dòng nếu nhiều nút */
+    }
+
+    .btn-lib {
+        flex-grow: 1; /* Nút sẽ giãn đều ra */
+        justify-content: center;
+    }
+
+    /* Tiêu đề nhỏ lại một chút */
+    .lib-title h2 {
+        font-size: 1.3rem;
+    }
+
+    /* XỬ LÝ BẢNG TRÊN MOBILE 
+      Bảng sẽ có thanh cuộn ngang độc lập, không làm tràn toàn bộ trang
+    */
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Hỗ trợ cuộn mượt trên iOS */
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+    }
+
+    .lib-table {
+        min-width: 700px; /* Ép bảng giữ nguyên form, ai muốn xem thì lướt sang ngang */
+        border: none; /* Bỏ border ngoài của table vì đã có ở thẻ bọc */
+    }
+
+    .border-table {
+        border: none;
+    }
+
+    .lib-table td:first-child {
+        border-radius: 0; /* Xóa bo góc ở row trên mobile */
+    }
+
+    .lib-table td:last-child {
+        border-radius: 0;
+    }
+}
+
+/* --- MOBILE NHỎ (Dưới 480px) --- */
+@media (max-width: 479.98px) {
+    .btn-lib {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+
+    /* Thu nhỏ nút icon thao tác (Sửa/Xóa) trên đt */
+    .action-icon {
+        width: 28px;
+        height: 28px;
+    }
+}

@@ -1,0 +1,237 @@
+﻿@model WebNangCao_MVC_Model.Models.Question
+
+@{
+    ViewData["Title"] = "Chỉnh sửa câu hỏi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Lấy ExamId từ Controller truyền sang (nếu có) để làm link quay lại
+    int currentExamId = ViewBag.ExamId ?? 0;
+}
+
+<link href="~/css/classifyExam.css" rel="stylesheet" />
+
+<div class="lib-page-wrapper">
+    <div class="lib-main-container" style="max-width: 850px;">
+        <div class="lib-panel">
+
+            <div class="lib-header">
+                <div>
+                    <h2 class="fw-bold" style="display: flex; align-items: center; gap: 10px;">
+                        <i data-lucide="file-edit" style="color: #4361ee;"></i>
+                        Chỉnh sửa câu hỏi
+                    </h2>
+                    <p class="text-muted" style="margin-top: 5px;">
+                        ID Câu hỏi: <span class="badge-id">#@Model.Id</span>
+                    </p>
+                </div>
+                <a href="/Student/ClassifyExam?examId=@currentExamId" class="btn-lib btn-secondary">
+                    <i data-lucide="chevron-left"></i> Quay lại kho
+                </a>
+            </div>
+
+            <form asp-action="Edit" method="post" id="edit-question-form">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" name="examId" value="@currentExamId" />
+
+                <div class="form-section">
+                    <div class="form-group mb-4">
+                        <label class="form-label fw-bold"><i data-lucide="help-circle"></i> Nội dung câu hỏi</label>
+                        <textarea asp-for="Content" class="form-control-custom" rows="4" placeholder="Nhập câu hỏi tại đây...">@Model.Content</textarea>
+                    </div>
+
+                    <div class="form-group mb-4" style="max-width: 300px;">
+                        <label class="form-label fw-bold"><i data-lucide="bar-chart"></i> Độ khó hiện tại</label>
+                        <select asp-for="Difficulty" class="form-control-custom select-custom">
+                            <option value="Chưa phân loại">Chưa phân loại</option>
+                            <option value="Dễ">Dễ</option>
+                            <option value="Trung bình">Trung bình</option>
+                            <option value="Khó">Khó</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="my-5" style="border-color: #f1f5f9;" />
+
+                <div class="form-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold m-0"><i data-lucide="list-checks"></i> Danh sách các đáp án</h4>
+                        <span class="text-muted" style="font-size: 0.85rem;">Tích chọn ô bên phải để đánh dấu đáp án đúng</span>
+                    </div>
+
+                    <div class="answers-container">
+                        @if (Model.Answers != null)
+                        {
+                            var answerList = Model.Answers.ToList();
+                            for (int i = 0; i < answerList.Count; i++)
+                            {
+                                <div class="answer-edit-card @(answerList[i].IsCorrect ? "is-correct-border" : "")">
+                                    <input type="hidden" name="answers[@i].Id" value="@answerList[i].Id" />
+                                    <input type="hidden" name="answers[@i].QuestionId" value="@Model.Id" />
+
+                                    <div class="answer-index">@(i + 1)</div>
+
+                                    <div class="answer-textarea">
+                                        <textarea name="answers[@i].Content" class="form-control-plain" placeholder="Nội dung đáp án...">@answerList[i].Content</textarea>
+                                    </div>
+
+                                    <div class="answer-check-zone">
+                                        <label class="custom-checkbox-container">
+                                            <input type="checkbox" name="answers[@i].IsCorrect" value="true" class="correct-trigger" @(answerList[i].IsCorrect ? "checked" : "") />
+                                            <span class="checkmark"></span>
+                                            <input type="hidden" name="answers[@i].IsCorrect" value="false" />
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="form-actions mt-5">
+                    <button type="submit" class="btn-lib btn-primary btn-lg w-100" style="justify-content: center; height: 50px; font-size: 1rem;">
+                        <i data-lucide="save"></i> Cập nhật và lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            const checkboxes = document.querySelectorAll('.correct-trigger');
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const card = this.closest('.answer-edit-card');
+                    if(this.checked) card.classList.add('is-correct-border');
+                    else card.classList.remove('is-correct-border');
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    /* Giữ nguyên CSS như file trước */
+    .badge-id {
+        background: #f1f5f9;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        transition: 0.2s;
+        font-size: 1rem;
+    }
+
+        .form-control-custom:focus {
+            border-color: #4361ee;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+    .answer-edit-card {
+        display: flex;
+        gap: 15px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+        align-items: center;
+        transition: 0.3s;
+    }
+
+    .is-correct-border {
+        border: 2px solid #22c55e;
+        background: #f0fdf4;
+    }
+
+    .answer-index {
+        width: 30px;
+        height: 30px;
+        background: #f1f5f9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #64748b;
+        flex-shrink: 0;
+    }
+
+    .answer-textarea {
+        flex-grow: 1;
+    }
+
+    .form-control-plain {
+        width: 100%;
+        border: none;
+        background: transparent;
+        resize: none;
+        outline: none;
+        font-size: 0.95rem;
+    }
+
+    .custom-checkbox-container {
+        position: relative;
+        padding-left: 35px;
+        cursor: pointer;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        min-height: 25px; /* Đảm bảo đủ chiều cao cho khối */
+    }
+
+        .custom-checkbox-container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .checkmark {
+        position: absolute;
+        top: 50%; /* Căn giữa dọc tuyệt đối */
+        transform: translateY(-50%); /* Căn giữa dọc tuyệt đối */
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #cbd5e1;
+        border-radius: 6px;
+    }
+
+    .custom-checkbox-container:hover input ~ .checkmark {
+        background-color: #94a3b8;
+    }
+
+    .custom-checkbox-container input:checked ~ .checkmark {
+        background-color: #22c55e;
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 9px;
+        top: 5px;
+        width: 7px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        transform: rotate(45deg);
+    }
+
+    .custom-checkbox-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+</style>

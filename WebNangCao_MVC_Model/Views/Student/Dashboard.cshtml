@@ -73,9 +73,14 @@
                 <h1>Dashboard Thí Sinh</h1>
                 <p>Tìm kiếm và tham gia các bài thi</p>
             </div>
-            <button type="button" id="btnOpenJoinModal" class="btn-join-class">
-                <i data-lucide="plus-circle"></i> Tham gia lớp học
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button type="button" id="btnOpenPersonalExamModal" class="btn-create-exam" style="background: #4f46e5; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="file-plus-2"></i> Tạo đề thi cá nhân
+                </button>
+                <button type="button" id="btnOpenJoinModal" class="btn-join-class">
+                    <i data-lucide="plus-circle"></i> Tham gia lớp học
+                </button>
+            </div>
         </section>
 
         <section class="stats-grid">
@@ -380,7 +385,48 @@
             </form>
         </div>
     </div>
+    <!--Modal thêm bài làm cá nhân-->
+    <div class="custom-modal-overlay" id="personalExamModal">
+        <div class="custom-modal" style="width: 500px;">
+            <div class="modal-header">
+                <h3>Tạo Đề Thi Cá Nhân (Upload Excel)</h3>
+                <button type="button" id="btnClosePersonalModal" class="btn-icon-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="dropZone" style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 40px 20px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.3s;">
+                    <i data-lucide="upload-cloud" style="width: 48px; height: 48px; color: #64748b; margin-bottom: 16px;"></i>
+                    <h4 style="margin: 0 0 8px 0; color: #334155;">Kéo thả file Excel vào đây</h4>
+                    <p style="margin: 0; font-size: 14px; color: #64748b;">hoặc click để chọn file (.xlsx, .xls)</p>
+                    <input type="file" id="fileInput" accept=".xlsx, .xls" style="display: none;" />
+                </div>
 
+                <div id="errorContainer" style="display: none; margin-top: 16px; max-height: 200px; overflow-y: auto; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px;">
+                    <h5 style="margin: 0 0 8px 0; color: #ef4444;"><i data-lucide="alert-triangle" style="width: 16px; height: 16px;"></i> Phát hiện lỗi trong file:</h5>
+                    <ul id="errorList" style="margin: 0; padding-left: 20px; color: #b91c1c; font-size: 13px;"></ul>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center;">
+                    <p style="font-size: 13px; color: #64748b;">
+                        @if (ViewBag.LatestExamId != null)
+                        {
+                            <span>Bạn có một đề thi đang tạo: </span>
+                            <br />
+                            <a href="@Url.Action("ClassifyExam", "Student", new { examId = ViewBag.LatestExamId })"
+                               style="color: #4f46e5; font-weight: 600;">
+                                Tiếp tục phân loại [@ViewBag.LatestExamTitle]
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Student/PersonalExamsList" style="color: #64748b; font-weight: 600;">
+                                Xem danh sách đề thi đã tạo
+                            </a>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <script>
         // Kích hoạt icon Lucide

@@ -7,6 +7,8 @@
         public int TotalQuestions { get; set; }
         public int CorrectAnswers { get; set; }
         public List<ReviewQuestionViewModel> Questions { get; set; } = new List<ReviewQuestionViewModel>();
+        public int TestId { get; set; }
+        public bool IsSelfCreated { get; set; } // Phân biệt: true = SV tự tạo, false = GV giao;
     }
 
     public class ReviewQuestionViewModel

@@ -19,16 +19,28 @@
                     <strong class="status-pass">Hoàn thành</strong>
                 </div>
             </div>
+
             <div class="action-buttons">
-                <a href="@Url.Action("Dashboard", "Student")" class="btn-back">
-                    Quay về trang chủ
-                </a>
-
-
-                <button type="button" onclick="window.print()" class="btn-print">
-                    In kết quả
-                </button>
+                @if (Model.IsSelfCreated)
+                {
+                    <button type="button" onclick="handlePostTest('RETAKE', @Model.TestId)" class="btn-back" style="background: #3b82f6; color: white; border: none;">
+                        <i class="fas fa-redo"></i> Làm lại ngay
+                    </button>
+                    <button type="button" onclick="handlePostTest('SAVE', @Model.TestId)" class="btn-print" style="background: #64748b; color: white;">
+                        <i class="fas fa-save"></i> Lưu bài
+                    </button>
+                }
+                else
+                {
+                    <a href="@Url.Action("Dashboard", "Student")" class="btn-back">
+                        Quay về trang chủ
+                    </a>
+                    <button type="button" onclick="window.print()" class="btn-print">
+                        In kết quả
+                    </button>
+                }
             </div>
+
         </div>
     </header>
 
@@ -48,7 +60,6 @@
                         bool isUserSelected = (q.SelectedAnswerId == ans.AnswerId);
                         bool isCorrect = ans.IsCorrectAnswer;
 
-                        // Xác định class trạng thái
                         string statusClass = "";
                         if (isCorrect) statusClass = "correct";
                         else if (isUserSelected && !isCorrect) statusClass = "wrong";
@@ -61,7 +72,6 @@
                                 }
                                 else if (isUserSelected)
                                 {
-
                                     <span>✖</span>
                                 }
                             </div>
@@ -75,8 +85,76 @@
                 </div>
             </section>
         }
+
+        @if (Model.IsSelfCreated)
+        {
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 40px; padding-bottom: 20px;">
+                <button class="btn-print" style="background: #ef4444; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;" onclick="handlePostTest('DELETE', @Model.TestId)">
+                    <i class="fas fa-trash-alt"></i> Xóa vĩnh viễn bài & Câu hỏi
+                </button>
+                <button class="btn-back" style="padding: 12px 24px; border-radius: 8px;" onclick="handlePostTest('SAVE', @Model.TestId)">
+                    <i class="fas fa-arrow-left"></i> Lưu & Về danh sách ôn tập
+                </button>
+            </div>
+        }
     </main>
 </div>
 
 <link rel="stylesheet" href="~/css/review-result.css" />
 <script src="~/js/review-result.js"></script>
+
+@if (Model.IsSelfCreated)
+{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function handlePostTest(actionType, testId) {
+            if (actionType === 'RETAKE') {
+                window.location.href = `/TestAttempt/GiaoDienLamBai?testId=${testId}&mode=retake`;
+                return;
+            }
+
+            if (actionType === 'SAVE') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đã lưu bài thi!',
+                    text: 'Bạn có thể làm lại bài này bất cứ lúc nào trong danh sách ôn tập.',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = '/Student/Dashboard';
+                });
+                return;
+            }
+
+            if (actionType === 'DELETE') {
+                Swal.fire({
+                    title: 'Cảnh báo nguy hiểm!',
+                    text: "Bạn đang xóa bài thi TỰ TẠO. Hành động này sẽ xóa sạch bài làm và XÓA LUÔN CÁC CÂU HỎI trong PostgreSQL. Không thể khôi phục!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Đồng ý, xóa hết!',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/TestAttempt/DeleteTestAndQuestions?testId=${testId}`, {
+                            method: 'POST'
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Đã xóa!', 'Toàn bộ dữ liệu bài tự tạo đã bốc hơi.', 'success')
+                                .then(() => {
+                                    window.location.href = '/Student/Dashboard';
+                                });
+                            } else {
+                                Swal.fire('Lỗi!', 'Không thể xóa dữ liệu: ' + data.message, 'error');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+}

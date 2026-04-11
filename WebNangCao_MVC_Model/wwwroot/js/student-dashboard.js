@@ -215,7 +215,129 @@
     if (classSection && localStorage.getItem('classSection_state') === 'closed') {
         classSection.classList.add('collapsed');
     }
-});
+
+    // Logic kéo thả phân loại câu hỏi
+    const personalModal = document.getElementById('personalExamModal');
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const errorContainer = document.getElementById('errorContainer');
+    const errorList = document.getElementById('errorList');
+
+    // Mở modal (khi bấm vào khu vực chọn file)
+    dropZone.onclick = () => fileInput.click();
+
+    // Đóng modal
+    document.getElementById('btnOpenPersonalExamModal').onclick = () => personalModal.classList.add('active');
+    document.getElementById('btnClosePersonalModal').onclick = () => {
+        personalModal.classList.remove('active');
+        resetDropZone(); // Hàm reset lại giao diện khi đóng
+    };
+
+    // Xử lý hiệu ứng Drag & Drop
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#4f46e5';
+        dropZone.style.background = '#e0e7ff';
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#cbd5e1';
+        dropZone.style.background = '#f8fafc';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#cbd5e1';
+        dropZone.style.background = '#f8fafc';
+
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            handleFileUpload(e.dataTransfer.files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileUpload(e.target.files[0]);
+        }
+    });
+
+    // Đọc file Excel và gửi lên server
+    function handleFileUpload(file) {
+        if (!file.name.match(/\.(xlsx|xls)$/i)) {
+            alert('Chỉ chấp nhận định dạng file Excel (.xlsx, .xls)');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('excelFile', file); // 'excelFile' phải trùng với tên tham số trong Controller
+
+        // Hiển thị trạng thái loading UI
+        dropZone.innerHTML = `
+            <i data-lucide="loader" class="lucide-spin" style="width: 48px; height: 48px; color: #4f46e5; margin-bottom: 16px;"></i>
+            <h4 style="margin: 0 0 8px 0; color: #334155;">Đang tải lên và xử lý...</h4>
+            <p style="margin: 0; font-size: 14px; color: #64748b;">Vui lòng không đóng cửa sổ này</p>
+        `;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        errorContainer.style.display = 'none';
+
+        // GỌI API LÊN BACKEND
+        fetch('/Student/UploadPersonalExam', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Đọc file thành công: Chuyển hướng thẳng sang giao diện phân loại câu hỏi
+                    // Chuyển hướng sang trang phân loại câu hỏi với ID vừa tạo
+                    window.location.href = `/Student/ClassifyExam?examId=${data.examId}`;
+                } else {
+                    // Tải thất bại -> Hiển thị danh sách lỗi trả về từ NPOI
+                    showErrors(data.errors || [data.message || 'Đã có lỗi xảy ra khi xử lý file.']);
+                    resetDropZone();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrors(['Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.']);
+                resetDropZone();
+            });
+    }
+
+    // 1. Sửa lỗi showErrors: Phân tích đúng Object để lấy "dong" và "loi" thay vì xuất ra [object Object]
+    function showErrors(errors) {
+        errorList.innerHTML = '';
+        errors.forEach(err => {
+            const li = document.createElement('li');
+
+            if (typeof err === 'object' && err !== null) {
+                // Nếu đối tượng trả về chứa dòng và nội dung lỗi
+                li.textContent = err.dong && err.dong > 0
+                    ? `Dòng ${err.dong}: ${err.loi}`
+                    : err.loi;
+            } else {
+                // Fallback nếu error là một string bình thường
+                li.textContent = err;
+            }
+
+            li.style.marginBottom = '4px';
+            errorList.appendChild(li);
+        });
+        errorContainer.style.display = 'block';
+    }
+
+    // Hàm phụ trợ: Reset lại UI của drop zone
+    function resetDropZone() {
+        fileInput.value = '';
+        dropZone.innerHTML = `
+            <i data-lucide="upload-cloud" style="width: 48px; height: 48px; color: #64748b; margin-bottom: 16px;"></i>
+            <h4 style="margin: 0 0 8px 0; color: #334155;">Kéo thả file Excel vào đây</h4>
+            <p style="margin: 0; font-size: 14px; color: #64748b;">hoặc click để chọn file (.xlsx, .xls)</p>
+        `;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+}); // Kết thúc block DOMContentLoaded
 
 // Hàm toàn cục cho HTML
 function toggleSection(sectionId) {
