@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebNangCao_MVC_Model.Data;
@@ -11,9 +12,11 @@ using WebNangCao_MVC_Model.Data;
 namespace WebNangCao_MVC_Model.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260415035208_AddDifficultyToExam")]
+    partial class AddDifficultyToExam
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,7 @@ namespace WebNangCao_MVC_Model.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("IdGroup")
+                    b.Property<int>("IdGroup")
                         .HasColumnType("integer")
                         .HasColumnName("GroupId");
 
@@ -90,14 +93,8 @@ namespace WebNangCao_MVC_Model.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(true);
 
-                    b.Property<bool>("IsSelfCreated")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("SubjectName")
                         .IsRequired()
@@ -184,12 +181,7 @@ namespace WebNangCao_MVC_Model.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TeacherId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
 
                     b.ToTable("Groups");
                 });
@@ -265,18 +257,6 @@ namespace WebNangCao_MVC_Model.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2026, 4, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "admin123@gmail.com",
-                            FullName = "SuperAdmin",
-                            PasswordHash = "$2a$12$y92vwbAsONQcJkeBGvrvP.W0Np6VHv2ouFiAeSkpLFC9iAcHzp2.q",
-                            Role = "Admin",
-                            Username = "admin"
-                        });
                 });
 
             modelBuilder.Entity("WebNangCao_MVC_Model.Models.UserGroup", b =>
@@ -327,7 +307,9 @@ namespace WebNangCao_MVC_Model.Migrations
                 {
                     b.HasOne("WebNangCao_MVC_Model.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("IdGroup");
+                        .HasForeignKey("IdGroup")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Group");
                 });
@@ -360,15 +342,6 @@ namespace WebNangCao_MVC_Model.Migrations
                         .IsRequired();
 
                     b.Navigation("ExamResult");
-                });
-
-            modelBuilder.Entity("WebNangCao_MVC_Model.Models.Group", b =>
-                {
-                    b.HasOne("WebNangCao_MVC_Model.Models.User", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId");
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("WebNangCao_MVC_Model.Models.UserGroup", b =>
