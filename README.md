@@ -95,6 +95,9 @@ Vì đây là đồ án chuyên sâu về Kiểm thử Phần mềm, nhóm tập
 
 Cấu trúc thư mục mã nguồn kiểm thử (`WebNangCao_MVC_KiemThu`) được tổ chức như sau:
  WebNangCao_MVC_KiemThu
- ┣  DangNhapDangKyTest.cs        # Chứa các kịch bản kiểm thử (Test Cases) cho chức năng Xác thực người dùng (Login/Register). Đảm bảo tính bảo mật và luồng truy cập hợp lệ.
- ┣  KiemThuQuaTrinhLamBaiThi.cs  # Chứa các kịch bản kiểm thử cho Nghiệp vụ cốt lõi: Quá trình người dùng chọn đề, làm bài thi và nộp bài (Submit). Đảm bảo hệ thống ghi nhận đúng điểm số và thời gian.
- ┗  WebNangCao_MVC_KiemThu.csproj # File cấu hình thư viện NUnit và Selenium cho project kiểm thử.
+ 
+ DangNhapDangKyTest.cs        # Chứa các kịch bản kiểm thử (Test Cases) cho chức năng Xác thực người dùng (Login/Register). Đảm bảo tính bảo mật và luồng truy cập hợp lệ.
+ 
+ KiemThuQuaTrinhLamBaiThi.cs  # Chứa các kịch bản kiểm thử cho Nghiệp vụ cốt lõi: Quá trình người dùng chọn đề, làm bài thi và nộp bài (Submit). Đảm bảo hệ thống ghi nhận đúng điểm số và thời gian.
+ 
+ WebNangCao_MVC_KiemThu.csproj # File cấu hình thư viện NUnit và Selenium cho project kiểm thử.
