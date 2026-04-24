@@ -88,3 +88,13 @@ Mở file mã nguồn chứa các Test Case.
 Nhấp chuột phải vào màn hình code > Chọn Run Tests (Kèm biểu tượng ống nghiệm).
 
 Hệ thống sẽ tự động bật trình duyệt và thực thi các kịch bản kiểm thử. Bạn có thể quan sát trực tiếp kết quả (Pass/Fail) trên cửa sổ Test Explorer.
+
+## Cấu trúc thư mục & Phạm vi kiểm thử (Test Scope)
+
+Vì đây là đồ án chuyên sâu về Kiểm thử Phần mềm, nhóm tập trung toàn bộ nguồn lực vào việc kiểm thử tự động (Automation Test) cho các luồng nghiệp vụ (Business Flow) cốt lõi nhất của hệ thống. 
+
+Cấu trúc thư mục mã nguồn kiểm thử (`WebNangCao_MVC_KiemThu`) được tổ chức như sau:
+ WebNangCao_MVC_KiemThu
+ ┣  DangNhapDangKyTest.cs        # Chứa các kịch bản kiểm thử (Test Cases) cho chức năng Xác thực người dùng (Login/Register). Đảm bảo tính bảo mật và luồng truy cập hợp lệ.
+ ┣  KiemThuQuaTrinhLamBaiThi.cs  # Chứa các kịch bản kiểm thử cho Nghiệp vụ cốt lõi: Quá trình người dùng chọn đề, làm bài thi và nộp bài (Submit). Đảm bảo hệ thống ghi nhận đúng điểm số và thời gian.
+ ┗  WebNangCao_MVC_KiemThu.csproj # File cấu hình thư viện NUnit và Selenium cho project kiểm thử.
