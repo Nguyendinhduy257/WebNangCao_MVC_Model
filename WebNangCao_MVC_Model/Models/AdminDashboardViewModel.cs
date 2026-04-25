@@ -1,6 +1,6 @@
 namespace WebNangCao_MVC_Model.Models
 {
-    public class AdminDashboradViewModel
+    public class AdminDashboardViewModel
     {
         public int TotalActiveUsers {get; set;}
         public int TotalExams {get; set;}
@@ -24,5 +24,13 @@ namespace WebNangCao_MVC_Model.Models
         public List<ActivityLog> RecentLogs { get; set; } = new List<ActivityLog>();
         // 2. DANH SÁCH NHỮNG NGƯỜI VỪA ĐĂNG KÝ (Cần duyệt)
         public List<User> PendingUsers { get; set; } = new List<User>();
+        public SystemStatusDto SystemHealthStatus { get; set; } = new SystemStatusDto();
     }
+    public class SystemStatusDto
+{
+    public bool IsWebServerOnline { get; set; } = true; 
+    public bool IsDatabaseOnline { get; set; }
+    public decimal StorageUsagePercentage { get; set; } // Ví dụ: 85.0m
+    public string BackupStatus { get; set; } = "Active"; // Hoặc "Failed", "Disabled"
+}
 }

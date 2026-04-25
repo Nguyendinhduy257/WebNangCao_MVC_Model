@@ -22,6 +22,15 @@ namespace WebNangCao_MVC_Model.Models
 
         // Thêm trường này để quản lý thời gian tạo
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        // ĐỂ TÍNH: "Người dùng tích cực" hoặc "Đăng nhập hôm nay"
+    public DateTime? LastLoginAt { get; set; } 
+    
+    // ĐỂ TÍNH: "Thời gian online trung bình" (Cộng dồn số phút họ mở app)
+    public int TotalOnlineMinutes { get; set; } = 0; 
+
+    // QUYỀN LỰC ADMIN: Không xóa tài khoản, chỉ khóa mõm!
+    public bool IsBanned { get; set; } = false;
+    public string BanReason { get; set; } = string.Empty;
 
         //thêm bảng UserGroups là bảng trung gian để quản lý mối quan hệ nhiều-nhiều giữa User và Group
         // Một User có thể thuộc nhiều Group thông qua bảng trung gian UserGroup
